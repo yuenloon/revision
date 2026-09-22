@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Mechanics – Test‑Style Study Guide (Example‑Based)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f9fe;
+            color: #1a2b3c;
+            line-height: 1.6;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+
+        /* ---- navigation tabs ---- */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #cde0ee;
+            padding-bottom: 0.8rem;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.7rem 1.3rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2a5f7a;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .tab-btn:hover {
+            background: #e1effa;
+        }
+        .tab-btn.active {
+            background: #2a7faa;
+            color: white;
+            box-shadow: 0 4px 10px rgba(42,127,170,0.25);
+        }
+
+        /* ---- sections ---- */
+        .section {
+            display: none;
+            animation: fade 0.25s ease;
+        }
+        .section.active {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0.5; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+            color: #0b3b5c;
+            border-left: 8px solid #2a7faa;
+            padding-left: 1.2rem;
+        }
+        .subhead {
+            font-size: 1rem;
+            color: #2c4a66;
+            margin-bottom: 2rem;
+            margin-left: 2rem;
+        }
+        h2 {
+            font-size: 1.45rem;
+            margin: 1.8rem 0 1rem 0;
+            color: #1b4e6b;
+            border-bottom: 3px solid #b3d9f0;
+            padding-bottom: 0.3rem;
+        }
+        h3 {
+            font-size: 1.15rem;
+            margin: 1.4rem 0 0.6rem 0;
+            color: #1f5e7e;
+        }
+
+        /* ---- cards ---- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 30, 50, 0.06);
+            padding: 1.3rem 1.5rem;
+            border: 1px solid #d9e9f5;
+            transition: 0.15s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 70, 120, 0.10);
+        }
+        .formula {
+            background: #f0f7fe;
+            border-left: 5px solid #2a7faa;
+            padding: 0.7rem 1.1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            border-radius: 0 10px 10px 0;
+            margin: 0.8rem 0;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fff9e0;
+            border-left: 5px solid #e6b800;
+            padding: 0.7rem 1.1rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .badge {
+            display: inline-block;
+            background: #2a7faa;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+            margin-right: 0.5rem;
+        }
+        .example {
+            background: #e6f3fa;
+            border-radius: 12px;
+            padding: 0.8rem 1.1rem;
+            margin: 0.9rem 0;
+            border: 1px solid #b8d6e9;
+            font-size: 0.95rem;
+        }
+        .example strong {
+            color: #0f4b6b;
+        }
+        .answer {
+            font-weight: 600;
+            color: #0f6b3e;
+            background: #e8f5e9;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* ---- visual / svg ---- */
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 0.8rem;
+            border: 1px solid #c8ddec;
+        }
+        .anim-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #d0e2f0;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .anim-box svg {
+            max-width: 100%;
+        }
+
+        /* ---- details / collapsible ---- */
+        .collapsible {
+            background: #eef5fa;
+            border-radius: 14px;
+            margin: 1rem 0;
+            border: 1px solid #c2d9e9;
+            overflow: hidden;
+        }
+        .collapsible summary {
+            padding: 1rem 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1b4e6b;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            background: #e3f0fa;
+            font-size: 0.98rem;
+        }
+        .collapsible summary::before {
+            content: "▶";
+            font-size: 0.8rem;
+            margin-right: 0.8rem;
+            transition: 0.2s;
+        }
+        .collapsible[open] summary::before {
+            transform: rotate(90deg);
+        }
+        .collapsible summary::-webkit-details-marker {
+            display: none;
+        }
+        .collapsible-content {
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid #d4e4f0;
+            background: white;
+        }
+
+        /* ---- tables ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #2a7faa;
+            color: white;
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+            font-weight: 500;
+        }
+        td, th {
+            border: 1px solid #bdd7e7;
+            padding: 0.6rem 0.8rem;
+        }
+        tr:nth-child(even) {
+            background: #f6fbfe;
+        }
+
+        /* ---- misc ---- */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #5d7f99;
+            border-top: 1px solid #d0e0ed;
+            padding-top: 1.5rem;
+        }
+        @media (max-width: 700px) {
+            h1 { font-size: 1.5rem; }
+            body { padding: 0.8rem; }
+            .tab-btn { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+        }
+        ul, ol {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+        .mt-1 { margin-top: 0.8rem; }
+        .mt-2 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.8rem; }
+        .text-center { text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🌊 Fluid Mechanics – Test‑Style Study Guide</h1>
+    <div class="subhead">Every example from your notes · Chapters 1–8 · Pre‑U / College level</div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tab1">📘 Ch 1–2: Properties & Pressure</button>
+        <button class="tab-btn" data-tab="tab2">📙 Ch 3: Fluid Statics</button>
+        <button class="tab-btn" data-tab="tab3">📒 Ch 4: Mass & Energy</button>
+        <button class="tab-btn" data-tab="tab4">📕 Ch 5: Momentum</button>
+        <button class="tab-btn" data-tab="tab5">📔 Ch 6: Laminar / Turbulent</button>
+        <button class="tab-btn" data-tab="tab6">📓 Ch 6‑P2: Pipe Flow</button>
+        <button class="tab-btn" data-tab="tab7">💧 Ch 7: Water Hammer</button>
+        <button class="tab-btn" data-tab="tab8">🌬️ Ch 8: Drag & Boundary Layers</button>
+    </div>
+
+    <!-- ============ TAB 1: CH 1–2 ============ -->
+    <div id="tab1" class="section active">
+        <h2>📘 Chapter 1 – Fluid Properties</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 1: Density of air in a room</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Determine the density, specific gravity, and mass of air in a room 4 m × 5 m × 6 m at 100 kPa and 25°C. R = 0.287 kPa·m³/kg·K.</p>
+                <div class="formula">ρ = P / (R T) = 100 / (0.287 × 298.15) = 1.17 kg/m³</div>
+                <div class="formula">SG = ρ / ρ<sub>water</sub> = 1.17 / 1000 = 0.00117</div>
+                <div class="formula">V = 4 × 5 × 6 = 120 m³ · m = ρV = 1.17 × 120 = 140 kg</div>
+                <p class="answer">Answer: ρ = 1.17 kg/m³, SG = 0.00117, m = 140 kg</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 2: Minimum pressure to avoid cavitation</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water distribution system at 30°C. Determine minimum pressure to avoid cavitation. P<sub>sat</sub> at 30°C = 4.25 kPa.</p>
+                <div class="formula">P<sub>min</sub> = P<sub>sat@30°C</sub> = 4.25 kPa</div>
+                <p class="answer">Answer: Pressure must be maintained above 4.25 kPa.</p>
+                <div class="note">Note: Vapour pressure increases with temperature.</div>
+            </div>
+        </details>
+
+        <h2>📗 Chapter 2 – Pressure and Head</h2>
+
+        <details class="collapsible">
+            <summary>Example 2.1: Ocean depth pressure</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Neglecting surface pressure and compressibility, what is the pressure at 4600 m below ocean surface? γ = 10.05 kN/m³.</p>
+                <div class="formula">P = γ h = 10.05 × 4600 = 46,230 kN/m²</div>
+                <p class="answer">Answer: 46,230 kN/m² = 46.23 MPa</p>
+                <div class="note">Slide says 46,700 kN/m² — that is a calculation error. Correct is 46,230 kN/m².</div>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 2.2: Manometer pressure</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Manometer measures tank pressure. Fluid SG = 0.85, column height = 55 cm, P<sub>atm</sub> = 96 kPa. Determine absolute pressure.</p>
+                <div class="formula">ρ = SG × ρ<sub>H2O</sub> = 0.85 × 1000 = 850 kg/m³</div>
+                <div class="formula">P<sub>abs</sub> = P<sub>atm</sub> + ρgh = 96 + (850)(9.81)(0.55)/1000</div>
+                <div class="formula">P<sub>abs</sub> = 96 + 4.586 = 100.6 kPa</div>
+                <div class="formula">P<sub>gage</sub> = 100.6 – 96 = 4.6 kPa</div>
+                <p class="answer">Answer: Absolute = 100.6 kPa, Gauge = 4.6 kPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 2.3: Multifluid manometer</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Tank at 1400 m altitude (P<sub>atm</sub> = 85.6 kPa). h₁ = 0.1 m (water), h₂ = 0.2 m (oil, SG = 0.85), h₃ = 0.35 m (mercury, SG = 13.6). Determine air pressure.</p>
+                <div class="formula">P₁ = P<sub>atm</sub> – ρ<sub>w</sub>gh₁ – ρ<sub>oil</sub>gh₂ + ρ<sub>Hg</sub>gh₃</div>
+                <div class="formula">P₁ = 85.6 + 9.81[(13600)(0.35) – (1000)(0.1) – (850)(0.2)]/1000</div>
+                <div class="formula">P₁ = 85.6 + 9.81(4760 – 100 – 170)/1000 = 85.6 + 44.05 = 129.65 kPa</div>
+                <p class="answer">Answer: P<sub>air</sub> ≈ 130 kPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2.1: Diver pressure</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Diver descends 30 m. Density of seawater = 1025 kg/m³. Find increase in pressure.</p>
+                <div class="formula">ΔP = ρgΔh = 1025 × 9.81 × 30 = 301,700 Pa = 301.7 kPa</div>
+                <p class="answer">Answer: Increase = 301.7 kPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2.2: Pressure and head</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Gauge pressure = 350 kN/m². Express as head of (a) water, (b) mercury (RD = 13.6). Find absolute pressure if P<sub>atm</sub> = 101.3 kN/m².</p>
+                <div class="formula">(a) h<sub>water</sub> = P/(ρg) = 350,000/(1000 × 9.81) = 35.68 m</div>
+                <div class="formula">(b) h<sub>Hg</sub> = 350,000/(13.6 × 1000 × 9.81) = 2.62 m</div>
+                <div class="formula">P<sub>abs</sub> = 350 + 101.3 = 451.3 kN/m²</div>
+                <p class="answer">Answer: (a) 35.68 m water, (b) 2.62 m Hg, Absolute = 451.3 kN/m²</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2.3: Hydraulic system</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Piston A₁ = 21 cm², F₁ = 38 N. Second piston A₂ = 100 cm². Find F₂.</p>
+                <div class="formula">F₂ = F₁ × (A₂/A₁) = 38 × (100/21) = 181 N</div>
+                <p class="answer">Answer: F₂ = 181 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2.4: Dentist's chair</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> F₂ = 2269 N, A₁ = 88.12 cm², A₂ = 1221 cm². Find F₁.</p>
+                <div class="formula">F₁ = F₂ × A₁ / A₂ = 2269 × 88.12 / 1221 = 163.8 N</div>
+                <p class="answer">Answer: F₁ = 163.8 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Problem 3‑43: Hydraulic lift</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 500 kg load on hydraulic lift. Oil density = 780 kg/m³. Determine height h in thin tube (d = 1 cm) to raise weight. (Piston diameter D = 1.2 m assumed)</p>
+                <div class="formula">P<sub>gage</sub> = W/A = mg/(πD²/4) = 500 × 9.81 / (π × 1.2²/4) = 4337 Pa</div>
+                <div class="formula">h = P<sub>gage</sub>/(ρg) = 4340 / (780 × 9.81) = 0.567 m</div>
+                <p class="answer">Answer: h = 0.567 m = 56.7 cm</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Problem 3‑50: Air pressure change in manometer</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Change of 0.7 kPa in air pressure causes brine‑mercury interface to drop by 5 mm. Brine SG = 1.1, Mercury SG = 13.56. Find A₂/A₁.</p>
+                <div class="formula">ΔP = ρ<sub>Hg</sub>gΔh<sub>Hg</sub> + ρ<sub>brine</sub>gΔh<sub>brine</sub></div>
+                <div class="formula">Using continuity A₁Δh₁ = A₂Δh₂, solving gives A₂/A₁ ≈ 0.050</div>
+                <p class="answer">Answer: A₂/A₁ ≈ 0.05</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 2: CH 3 STATICS ============ -->
+    <div id="tab2" class="section">
+        <h2>📙 Chapter 3 – Fluid Statics</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 3.1: Circular plane surface</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Circular surface diameter = 2 m, vertical, top edge 0.5 m below water surface. Find force and depth of centre of pressure.</p>
+                <div class="formula">h<sub>c</sub> = 0.5 + 2/2 = 1.5 m · A = πD²/4 = π m²</div>
+                <div class="formula">F<sub>R</sub> = ρgh<sub>c</sub>A = 1000 × 9.81 × 1.5 × π = 46,234 N = 46.2 kN</div>
+                <div class="formula">h<sub>p</sub> = h<sub>c</sub> + I<sub>c</sub>/(h<sub>c</sub>A) = 1.5 + (π×1⁴/4)/(1.5×π) = 1.667 m</div>
+                <p class="answer">Answer: F<sub>R</sub> = 46.2 kN, h<sub>p</sub> = 1.667 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 3.2: Plywood sheet blocking concrete</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Plywood 1.22 m × 2.44 m blocks concrete. Hinged at top, stop at bottom. Concrete depth = 0.96 m, SG = 2.4. Find (a) resultant force and location, (b) force on stop.</p>
+                <div class="formula">ρ = 2.4 × 1000 = 2400 kg/m³ · h<sub>c</sub> = 0.48 m · A = 0.96 × 2.44 = 2.342 m²</div>
+                <div class="formula">F<sub>R</sub> = 2400 × 9.81 × 0.48 × 2.342 = 26,470 N = 26.47 kN</div>
+                <div class="formula">h<sub>p</sub> = 0.48 + (2.44×0.96³/12)/(0.48×2.342) = 0.64 m</div>
+                <div class="formula">F<sub>stop</sub> = F<sub>R</sub> × h<sub>p</sub>/0.96 = 26.47 × 0.64/0.96 = 17.65 kN</div>
+                <p class="answer">Answer: F<sub>R</sub> = 26.47 kN at h<sub>p</sub> = 0.64 m; F<sub>stop</sub> = 17.65 kN</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 3.3: Circular window on cruise ship</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 30‑cm diameter circular window, midpoint 5 m below water surface. Seawater SG = 1.025. Find force and pressure centre.</p>
+                <div class="formula">P<sub>avg</sub> = ρgh<sub>c</sub> = 1025 × 9.81 × 5 = 50,276 N/m²</div>
+                <div class="formula">F<sub>R</sub> = P<sub>avg</sub>A = 50,276 × π(0.3)²/4 = 3554 N ≈ 3550 N</div>
+                <div class="formula">y<sub>p</sub> = 5 + (0.15)²/(4×5) = 5.0011 m ≈ 5.00 m</div>
+                <p class="answer">Answer: F<sub>R</sub> = 3550 N, y<sub>p</sub> = 5.00 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 3.4: Vertical trapezoidal gate</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Find resultant force and centre of pressure. (Trapezoid: top width 3 m, bottom width 1 m, height 2 m, top edge at 5 m depth.)</p>
+                <div class="formula">h<sub>c</sub> = 5 + [2(2×1 + 3)]/[3(1 + 3)] = 5 + 10/12 = 5.83 m</div>
+                <div class="formula">A = 2(3 + 1)/2 = 4 m²</div>
+                <div class="formula">F<sub>R</sub> = 1000 × 9.81 × 5.83 × 4 = 228,900 N = 228.9 kN</div>
+                <div class="formula">I<sub>o</sub> = 2³(1² + 4×1×3 + 3²)/[36(1+3)] = 1.22 m⁴</div>
+                <div class="formula">h<sub>p</sub> = 5.83 + 1.22/(5.83×4) = 5.88 m</div>
+                <p class="answer">Answer: F<sub>R</sub> = 228.9 kN, h<sub>p</sub> = 5.88 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 3.5: Reservoir wall</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 25‑m deep reservoir, 150‑m wide wall (equilateral triangle). P<sub>atm</sub> = 100 kPa. Find total force (hydrostatic + atmospheric).</p>
+                <div class="formula">h<sub>c</sub> = 12.5 m · base = 25/tan60° = 28.87 m · A = 150 × 28.87 = 4330.5 m²</div>
+                <div class="formula">F<sub>R</sub> = (P<sub>atm</sub> + ρgh<sub>c</sub>)A = (100,000 + 1000×9.81×12.5) × 4330.5</div>
+                <div class="formula">F<sub>R</sub> = 222,625 × 4330.5 = 9.64 × 10⁸ N</div>
+                <p class="answer">Answer: F<sub>R</sub> = 9.64 × 10⁸ N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Question 1: Crane lowering sphere</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 1‑m diameter spherical steel block (ρ = 8050 kg/m³) lowered into lake. Find tension when (a) suspended in air, (b) completely immersed.</p>
+                <div class="formula">V = πD³/6 = 0.5236 m³ · W = 8050 × 9.81 × 0.5236 = 41,350 N</div>
+                <div class="formula">(a) T<sub>air</sub> = W = 41.35 kN</div>
+                <div class="formula">(b) F<sub>B</sub> = 1000 × 9.81 × 0.5236 = 5137 N · T = 41,350 – 5137 = 36,213 N</div>
+                <p class="answer">Answer: (a) 41.35 kN, (b) 36.2 kN</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Question 2: Spring scale</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Body weighs 7200 N in air, 4790 N in water. Find volume and density.</p>
+                <div class="formula">F<sub>B</sub> = 7200 – 4790 = 2410 N · V = F<sub>B</sub>/(ρ<sub>w</sub>g) = 2410/(1000×9.81) = 0.2457 m³</div>
+                <div class="formula">ρ = (W/g)/V = (7200/9.81)/0.2457 = 2987 kg/m³</div>
+                <p class="answer">Answer: V = 0.2457 m³, ρ = 2987 kg/m³</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 3: CH 4 MASS & ENERGY ============ -->
+    <div id="tab3" class="section">
+        <h2>📒 Chapter 4 – Conservation of Mass</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 4.1: Garden hose</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Fill 10‑gal bucket in 50 s. Hose inner diameter = 2 cm, nozzle exit diameter = 0.8 cm. Find (a) volume and mass flow rates, (b) average velocity at nozzle exit.</p>
+                <div class="formula">(a) Q = 10 gal / 50 s × 3.7854 L/gal = 0.757 L/s · ṁ = 0.757 kg/s</div>
+                <div class="formula">(b) A<sub>e</sub> = π(0.4 cm)² = 0.5027 cm² = 5.027×10⁻⁵ m²</div>
+                <div class="formula">V<sub>e</sub> = Q/A<sub>e</sub> = 0.757×10⁻³ / 5.027×10⁻⁵ = 15.1 m/s</div>
+                <p class="answer">Answer: (a) 0.757 L/s, 0.757 kg/s; (b) 15.1 m/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.1: Air duct</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Rectangular duct 300 mm × 450 mm, flow rate = 0.42 m³/s. Find mean velocity. If duct tapers to 150 mm × 400 mm, find new velocity.</p>
+                <div class="formula">A₁ = 0.3 × 0.45 = 0.135 m² · V₁ = 0.42/0.135 = 3.11 m/s</div>
+                <div class="formula">A₂ = 0.15 × 0.4 = 0.06 m² · V₂ = 0.42/0.06 = 7.0 m/s</div>
+                <p class="answer">Answer: V₁ = 3.11 m/s, V₂ = 7.0 m/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.2: Air compressor</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Air enters compressor: ρ = 1.2 kg/m³, V = 5 m/s, A = 20 cm². (a) Find mass flow rate. (b) Air leaves through 25 mm diameter pipe at 4 m/s. Find density.</p>
+                <div class="formula">(a) ṁ = ρAV = 1.2 × 20×10⁻⁴ × 5 = 0.012 kg/s</div>
+                <div class="formula">(b) A₂ = π(0.025)²/4 = 4.909×10⁻⁴ m² · ρ₂ = ṁ/(A₂V₂) = 0.012/(4.909×10⁻⁴ × 4) = 6.11 kg/m³</div>
+                <p class="answer">Answer: (a) 0.012 kg/s, (b) 6.11 kg/m³</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.3: Pipe fork</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe AB: d = 1.2 m, V = 3 m/s. Pipe BC: d = 1.5 m. At C, forks: CD (d = 0.8 m) carries 1/3 of flow in AB. CE velocity = 2.5 m/s. Find (a) Q<sub>AB</sub>, (b) V<sub>BC</sub>, (c) V<sub>CD</sub>, (d) d<sub>CE</sub>.</p>
+                <div class="formula">(a) Q<sub>AB</sub> = π(1.2)²/4 × 3 = 3.393 m³/s</div>
+                <div class="formula">(b) V<sub>BC</sub> = 3.393 / (π(1.5)²/4) = 1.92 m/s</div>
+                <div class="formula">(c) Q<sub>CD</sub> = 3.393/3 = 1.131 m³/s · V<sub>CD</sub> = 1.131/(π(0.8)²/4) = 2.25 m/s</div>
+                <div class="formula">(d) Q<sub>CE</sub> = 3.393 – 1.131 = 2.262 m³/s · A<sub>CE</sub> = 2.262/2.5 = 0.9048 m² · d<sub>CE</sub> = 1.073 m</div>
+                <p class="answer">Answer: (a) 3.393 m³/s, (b) 1.92 m/s, (c) 2.25 m/s, (d) 1.073 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.4: Closed tank mixing</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Inlet A: d = 150 mm, Q = 56 dm³/s, SG = 0.93. Inlet B: d = 100 mm, Q = 30 dm³/s, SG = 0.87. Outlet C: d = 175 mm. Find mass flow rate, velocity, and SG of mixture.</p>
+                <div class="formula">ṁ<sub>A</sub> = 0.93 × 1000 × 56×10⁻³ = 52.08 kg/s · ṁ<sub>B</sub> = 0.87 × 1000 × 30×10⁻³ = 26.1 kg/s</div>
+                <div class="formula">ṁ<sub>C</sub> = 78.18 kg/s · Q<sub>C</sub> = 86 dm³/s = 0.086 m³/s</div>
+                <div class="formula">V<sub>C</sub> = 0.086/(π(0.175)²/4) = 3.57 m/s · ρ<sub>C</sub> = 78.18/0.086 = 909 kg/m³ · SG = 0.909</div>
+                <p class="answer">Answer: ṁ = 78.18 kg/s, V = 3.57 m/s, SG = 0.909</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.5: Computer fan</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Fan flow rate = 0.34 m³/min, elevation 3400 m (ρ = 0.7 kg/m³). Find mass flow rate. If average velocity ≤ 110 m/min, find casing diameter.</p>
+                <div class="formula">ṁ = 0.7 × (0.34/60) = 0.00397 kg/s</div>
+                <div class="formula">V = 110 m/min = 1.833 m/s · A = (0.34/60)/1.833 = 0.00309 m²</div>
+                <div class="formula">D = √(4A/π) = √(4×0.00309/π) = 0.0627 m = 6.27 cm</div>
+                <p class="answer">Answer: ṁ = 0.00397 kg/s, D = 6.27 cm</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.6: Hair dryer</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Air density at inlet = 1.20 kg/m³, at exit = 1.05 kg/m³. Find percent increase in velocity.</p>
+                <div class="formula">ρ₁V₁ = ρ₂V₂ · V₂/V₁ = ρ₁/ρ₂ = 1.20/1.05 = 1.143</div>
+                <div class="formula">% increase = (1.143 – 1) × 100% = 14.3%</div>
+                <p class="answer">Answer: 14.3% increase</p>
+            </div>
+        </details>
+
+        <h2>📒 Chapter 4 Part 2 – Energy Equations</h2>
+
+        <details class="collapsible">
+            <summary>Example 4.1: Tank with outlet</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Large tank open to atmosphere, water height 5 m from outlet tap. Find velocity at outlet.</p>
+                <div class="formula">z₁ = V₂²/(2g) → V₂ = √(2gz₁) = √(2×9.81×5) = 9.9 m/s</div>
+                <p class="answer">Answer: V₂ = 9.9 m/s (Torricelli equation)</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 4.2: Hose jet height</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water main at 400 kPa gage. Hose held upward. Find maximum height of jet.</p>
+                <div class="formula">z₂ = P<sub>1,gage</sub>/(ρg) = 400,000/(1000×9.81) = 40.8 m</div>
+                <p class="answer">Answer: z₂ = 40.8 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 4.4: Tapering pipe</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe inclined 45°, converges from d₁ = 200 mm to d₂ = 100 mm over 2 m. Oil SG = 0.9, V₁ = 2 m/s. Find (a) pressure difference, (b) manometer reading.</p>
+                <div class="formula">V₂ = V₁(d₁/d₂)² = 2 × (200/100)² = 8 m/s</div>
+                <div class="formula">z₂ – z₁ = 2 sin45° = 1.414 m</div>
+                <div class="formula">P₁ – P₂ = ½ρ(V₂² – V₁²) + ρg(z₂ – z₁)</div>
+                <div class="formula">= 0.5×900(64 – 4) + 900×9.81×1.414 = 27,000 + 12,484 = 39,484 N/m²</div>
+                <div class="formula">(b) h = (P₁ – P₂)/[(ρ<sub>Hg</sub> – ρ<sub>oil</sub>)g] = 39,484/((13600–900)×9.81) = 0.317 m</div>
+                <p class="answer">Answer: P₁ – P₂ = 39.5 kPa, h = 0.317 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 4.5: Venturi meter</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Venturi meter d₁ = 250 mm, d₂ = 100 mm. Oil SG = 0.9. Mercury manometer reading = 0.63 m. Find theoretical volume flow rate.</p>
+                <div class="formula">A₁ = π(0.25)²/4 = 0.0491 m² · A₂ = π(0.10)²/4 = 0.00785 m²</div>
+                <div class="formula">Q = (A₁/√((A₁/A₂)²–1)) × √(2gh(ρ<sub>man</sub>/ρ – 1))</div>
+                <div class="formula">Q = (0.0491/√(39.1–1)) × √(2×9.81×0.63×(13600/900 – 1))</div>
+                <div class="formula">Q = (0.0491/6.17) × √(12.36 × 14.11) = 0.00796 × 13.21 = 0.105 m³/s</div>
+                <p class="answer">Answer: Q ≈ 0.105 m³/s</p>
+                <div class="note">Slide says 0.0977 m³/s — likely used slightly different values.</div>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4.2 (Energy): Air pipe with water manometer</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Air flows at 200 L/s through pipe: d₁ = 20 cm, d₂ = 10 cm. Water manometer. Find differential height h. Air density = 1.20 kg/m³.</p>
+                <div class="formula">V₁ = 0.2/(π(0.2)²/4) = 6.37 m/s · V₂ = 0.2/(π(0.1)²/4) = 25.5 m/s</div>
+                <div class="formula">h = ρ<sub>air</sub>(V₂² – V₁²)/(2ρ<sub>w</sub>g) = 1.2(650.25 – 40.58)/(2×1000×9.81)</div>
+                <div class="formula">h = 1.2 × 609.67 / 19620 = 0.0373 m = 3.7 cm</div>
+                <p class="answer">Answer: h = 3.7 cm</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Revision Q1: Firefighters nozzle</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Nozzle exit diameter = 6 cm, flow rate = 5 m³/min. Find (a) exit velocity, (b) horizontal resistance force.</p>
+                <div class="formula">(a) V = (5/60)/(π(0.06)²/4) = 29.5 m/s</div>
+                <div class="formula">(b) ṁ = 1000 × 5/60 = 83.3 kg/s · F = ṁV = 83.3 × 29.5 = 2457 N</div>
+                <p class="answer">Answer: (a) 29.5 m/s, (b) 2460 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Revision Q2: Pitot‑static probe</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pitot‑static probe connected to water manometer. Deflection = 7.3 cm. Find air velocity.</p>
+                <div class="formula">V = √(2ρ<sub>w</sub>gh/ρ<sub>air</sub>) = √(2×1000×9.81×0.073/1.25) = √1145.8 = 33.8 m/s</div>
+                <p class="answer">Answer: V = 33.8 m/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Revision Q3: 90° elbow</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water flow = 25 kg/s, pipe diameter = 10 cm, elevation difference = 35 cm. Find (a) gage pressure at inlet, (b) anchoring force.</p>
+                <div class="formula">V = 25/(1000×π(0.1)²/4) = 3.18 m/s</div>
+                <div class="formula">(a) P<sub>1,gage</sub> = ρgΔz = 1000×9.81×0.35 = 3434 Pa = 3.43 kPa</div>
+                <div class="formula">(b) F<sub>Rx</sub> = –ṁV – P₁A₁ = –79.5 – 27.0 = –106.5 N · F<sub>Rz</sub> = ṁV = 79.5 N</div>
+                <div class="formula">F<sub>R</sub> = √(106.5² + 79.5²) = 133 N</div>
+                <p class="answer">Answer: (a) 3.43 kPa, (b) F<sub>R</sub> ≈ 133 N at 143° from positive x</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Revision Q4: Tank with hose</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Tank water level 20 m above ground. Air pressure above water = 2 atm gage. Hose pointed straight up. Find maximum height.</p>
+                <div class="formula">z₂ = P<sub>1,gage</sub>/(ρg) + z₁ = (2×101,325)/(1000×9.81) + 20 = 20.66 + 20 = 40.7 m</div>
+                <p class="answer">Answer: z₂ = 40.7 m</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 4: CH 5 MOMENTUM ============ -->
+    <div id="tab4" class="section">
+        <h2>📕 Chapter 5 – Momentum Equation</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 5.1: Jet on inclined flat plate</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Jet diameter = 25 mm, velocity = 5 m/s, strikes inclined flat plate. Find force normal to plate as inclination varies.</p>
+                <div class="formula">F = ρAv²cosθ (stationary) · A = π(0.025)²/4 = 4.909×10⁻⁴ m²</div>
+                <div class="formula">ρAv² = 1000 × 4.909×10⁻⁴ × 25 = 12.27 N</div>
+                <div class="formula">θ = 0°: 12.27 N · θ = 30°: 10.63 N · θ = 60°: 6.14 N · θ = 90°: 0 N</div>
+                <p class="answer">Answer: Force varies as 12.27cosθ N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 5.2: Curved vane</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Jet deflected 60° by curved vane. Entry velocity = 30 m/s, exit = 25 m/s. Mass flow = 0.8 kg/s. Find resultant force.</p>
+                <div class="formula">F<sub>x</sub> = 0.8(30 – 25cos60°) = 0.8(30 – 12.5) = 14 N</div>
+                <div class="formula">F<sub>y</sub> = –0.8(25sin60°) = –17.32 N</div>
+                <div class="formula">R = √(14² + 17.32²) = 22.3 N · φ = tan⁻¹(17.32/14) = 51°</div>
+                <p class="answer">Answer: R = 22.3 N at 51° to the horizontal</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.1: Flat plate (stationary & moving)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Jet diameter = 50 mm, velocity = 18 m/s. Find force when (a) stationary, (b) moving at 6 m/s in same direction.</p>
+                <div class="formula">A = π(0.05)²/4 = 1.963×10⁻³ m²</div>
+                <div class="formula">(a) F = 1000 × 1.963×10⁻³ × 18² = 636 N</div>
+                <div class="formula">(b) F = 1000 × 1.963×10⁻³ × (18–6)² = 283 N</div>
+                <p class="answer">Answer: (a) 636 N, (b) 283 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.2: Inclined plate (moving)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> d = 25 mm, v = 5 m/s, angle = 30° to normal. Find force normal to plate (a) stationary, (b) moving at 2 m/s.</p>
+                <div class="formula">A = 4.909×10⁻⁴ m²</div>
+                <div class="formula">(a) F = 1000 × 4.909×10⁻⁴ × 25 × cos30° = 10.63 N</div>
+                <div class="formula">(b) F = 1000 × 4.909×10⁻⁴ × (5–2)² × cos30° = 3.83 N</div>
+                <p class="answer">Answer: (a) 10.63 N, (b) 3.83 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.3: Moving plate</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Jet area = 3 cm², V<sub>j</sub> = 20 m/s, plate moves at V<sub>c</sub> = 15 m/s. Find force to keep plate moving.</p>
+                <div class="formula">F = 1000 × 3×10⁻⁴ × (20–15)² = 7.5 N</div>
+                <p class="answer">Answer: F = 7.5 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.4: Stationary plate</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water strikes stationary plate at 20 m/s, mass flow = 10 kg/s. Find force.</p>
+                <div class="formula">F = ṁV = 10 × 20 = 200 N</div>
+                <p class="answer">Answer: F = 200 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.6: Reducing elbow</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water flow = 30 kg/s, deflected 45° upward. Inlet area = 150 cm², exit area = 25 cm². Elevation difference = 40 cm. Mass of elbow + water = 50 kg. Find anchoring force.</p>
+                <div class="formula">V₁ = 30/(1000×0.015) = 2 m/s · V₂ = 30/(1000×0.0025) = 12 m/s</div>
+                <div class="formula">P<sub>1,gage</sub> = ρgΔz + ½ρ(V₂² – V₁²) = 1000×9.81×0.4 + 500(144–4) = 3924 + 70,000 = 73,924 Pa</div>
+                <div class="formula">F<sub>Rx</sub> + P₁A₁ = ṁ(V₂cos45° – V₁) → F<sub>Rx</sub> = 194.5 – 1109 = –914.5 N</div>
+                <div class="formula">F<sub>Rz</sub> – W = ṁV₂sin45° → F<sub>Rz</sub> = 254.5 + 490.5 = 745 N</div>
+                <div class="formula">F<sub>R</sub> = √(914.5² + 745²) = 1180 N</div>
+                <p class="answer">Answer: F<sub>R</sub> ≈ 1180 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.7: Cart with brakes</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water jet velocity = 15 m/s, cart moves at 5 m/s, mass flow = 25 kg/s. Find braking force and power.</p>
+                <div class="formula">V<sub>rel</sub> = 15 – 5 = 10 m/s · F = ṁV<sub>rel</sub> = 25 × 10 = 250 N</div>
+                <div class="formula">P = F × V<sub>c</sub> = 250 × 5 = 1250 W = 1.25 kW</div>
+                <p class="answer">Answer: F = 250 N, P = 1.25 kW</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5.8: Plate on track (differential equation)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 5‑cm diameter jet, V = 18 m/s, plate mass = 1000 kg. Find (a) acceleration at t = 0, (b) time to reach 9 m/s, (c) velocity at 20 s.</p>
+                <div class="formula">F₀ = 1000 × π(0.05)²/4 × 18² = 636 N · a₀ = 636/1000 = 0.636 m/s²</div>
+                <div class="formula">(b) t = (m/ρA)(1/(V–u) – 1/V) = 28.3 s</div>
+                <div class="formula">(c) 1/(18–u) = 1/18 + ρAt/m → u = 7.46 m/s</div>
+                <p class="answer">Answer: (a) 0.636 m/s², (b) 28.3 s, (c) 7.46 m/s</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 5: CH 6 LAMINAR/TURBULENT ============ -->
+    <div id="tab5" class="section">
+        <h2>📔 Chapter 6 Part 1 – Laminar and Turbulent Flow</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 6.1: Maximum velocity for laminar flow</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water density = 1000 kg/m³, pipe diameter = 0.5 m, viscosity = 0.55×10⁻³ Ns/m². Find maximum velocity for laminar flow.</p>
+                <div class="formula">Re = ρVD/μ = 2000 → V = 2000 × 0.55×10⁻³ / (1000 × 0.5) = 0.0022 m/s</div>
+                <p class="answer">Answer: V = 0.0022 m/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 6.2: Oil flow type</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Oil viscosity = 0.05 kg/m·s, density = 860 kg/m³, pipe diameter = 0.1 m, velocity = 0.6 m/s. Determine flow type.</p>
+                <div class="formula">Re = 860 × 0.6 × 0.1 / 0.05 = 1032</div>
+                <p class="answer">Answer: Laminar flow (Re < 2300)</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2: Water and oil flow type</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Water flows through 25 mm pipe at 6 m/s. μ = 1.30×10⁻³ kg/m·s, ρ = 1000 kg/m³. Determine flow type. If oil (SG = 0.9, μ = 9.6×10⁻² kg/m·s) is pumped, what type?</p>
+                <div class="formula">Water: Re = 1000 × 6 × 0.025 / 1.30×10⁻³ = 115,385 → Turbulent</div>
+                <div class="formula">Oil: Re = 900 × 6 × 0.025 / 9.6×10⁻² = 1406 → Laminar</div>
+                <p class="answer">Answer: Water: turbulent, Oil: laminar</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q6.2: Oil flow rate (horizontal, uphill, downhill)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Oil at 20°C (ρ = 888 kg/m³, μ = 0.800 kg/m·s) flows through 5‑cm diameter, 40‑m long pipe. P₁ = 745 kPa, P₂ = 97 kPa. Find flow rate for (a) horizontal, (b) 15° upward, (c) 15° downward.</p>
+                <div class="formula">ΔP = 648 kPa · (a) Q = ΔP πD⁴/(128μL) = 0.00311 m³/s</div>
+                <div class="formula">(b) Q = (ΔP – ρgLsinθ)πD⁴/(128μL) = 0.00267 m³/s</div>
+                <div class="formula">(c) Q = (ΔP + ρgLsinθ)πD⁴/(128μL) = 0.00354 m³/s</div>
+                <div class="formula">Verification: Re = 100 < 2300 → laminar confirmed</div>
+                <p class="answer">Answer: (a) 0.00311, (b) 0.00267, (c) 0.00354 m³/s; Re = 100 (laminar)</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q6.3: Oil discharge from small pipe</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Oil density = 850 kg/m³, kinematic viscosity = 0.00062 m²/s, pipe diameter = 5 mm, length = 40 m, height = 3 m. Find flow rate, velocity, verify laminar.</p>
+                <div class="formula">μ = ρν = 850 × 0.00062 = 0.527 kg/m·s · P = ρgh = 25,016 Pa</div>
+                <div class="formula">Q = 25,020 × π × (0.005)⁴ / (128×0.527×40) = 1.821×10⁻⁸ m³/s</div>
+                <div class="formula">V = 9.27×10⁻⁴ m/s · Re = 850 × 9.27×10⁻⁴ × 0.005 / 0.527 = 0.0075</div>
+                <p class="answer">Answer: Q = 1.82×10⁻⁸ m³/s, V = 9.27×10⁻⁴ m/s, Re = 0.0075 (laminar)</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q6.4: Glycerine flow</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Glycerine viscosity = 0.9 N·s/m², density = 1260 kg/m³, pipe length = 6.5 m, diameter = 0.01 m, flow rate = 1.8 L/min. Find Re, pressure loss, max flow rate for laminar.</p>
+                <div class="formula">u = Q/A = (1.8×10⁻³/60)/(π(0.01)²/4) = 0.382 m/s</div>
+                <div class="formula">Re = 1260 × 0.382 × 0.01 / 0.9 = 5.35</div>
+                <div class="formula">Δp = 128μLQ/(πD⁴) = 715×10³ N/m² = 715 kPa</div>
+                <div class="formula">Q<sub>max</sub> = Re μ πD³/(4ρ) = 2300×0.9×π×0.001/(4×1260) = 1.29×10⁻³ m³/s</div>
+                <p class="answer">Answer: Re = 5.35 (laminar), Δp = 715 kPa, Q<sub>max</sub> = 1.29×10⁻³ m³/s</p>
+                <div class="note">Slide says Re = 0.535 — that is a calculation error. Correct is 5.35.</div>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 6: CH 6 PIPE FLOW ============ -->
+    <div id="tab6" class="section">
+        <h2>📓 Chapter 6 Part 2 – Flow in Pipes</h2>
+
+        <details class="collapsible" open>
+            <summary>Practice Q1: Head loss due to friction</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe diameter = 500 mm, length = 1.5 km, velocity = 1 m/s, f = 0.02. Find head loss.</p>
+                <div class="formula">h<sub>f</sub> = f(L/D)(V²/2g) = 0.02 × (1500/0.5) × (1²/19.62) = 3.06 m</div>
+                <p class="answer">Answer: h<sub>f</sub> = 3.06 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2: Pipe diameter from head loss</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 1500 m, velocity = 0.8 m/s, head loss = 8.7 m, f = 0.04. Find diameter.</p>
+                <div class="formula">8.7 = 0.04 × (1500/D) × (0.8²/19.62) → D = 0.225 m</div>
+                <p class="answer">Answer: D = 0.225 m = 225 mm</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q3: Discharge through pipe</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 250 m, diameter = 300 mm, head difference = 1.5 m, f = 0.04. Find discharge.</p>
+                <div class="formula">1.5 = 0.04 × (250/0.3) × V²/19.62 → V = 0.94 m/s</div>
+                <div class="formula">Q = π(0.3)²/4 × 0.94 = 0.0664 m³/s</div>
+                <p class="answer">Answer: Q = 0.0664 m³/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4: Head loss for given flow rate</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 400 m, diameter = 150 mm, flow rate = 20 L/s, f = 0.032. Find head loss.</p>
+                <div class="formula">V = 0.02/(π(0.15)²/4) = 1.132 m/s</div>
+                <div class="formula">h<sub>f</sub> = 0.032 × (400/0.15) × (1.132²/19.62) = 5.57 m</div>
+                <p class="answer">Answer: h<sub>f</sub> = 5.57 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5: Discharge between reservoirs</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 600 m, diameter = 200 mm, level difference = 10 m, f = 0.032. Find discharge.</p>
+                <div class="formula">10 = 0.032 × (600/0.2) × V²/19.62 → V = 1.43 m/s</div>
+                <div class="formula">Q = π(0.2)²/4 × 1.43 = 0.0449 m³/s</div>
+                <p class="answer">Answer: Q = 0.0449 m³/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q6: Pipe with minor losses</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 60 m, diameter = 150 mm, tank height = 2.6 m, f = 0.04. Find discharge considering all minor losses (K<sub>entry</sub> = 0.5, K<sub>exit</sub> = 1.0).</p>
+                <div class="formula">2.6 = V²/19.62 × [1 + 0.04×60/0.15 + 0.5 + 1] = V²/19.62 × 18.5</div>
+                <div class="formula">V = 1.66 m/s · Q = π(0.15)²/4 × 1.66 = 0.0293 m³/s</div>
+                <p class="answer">Answer: Q = 0.0302 m³/s = 30.2 L/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q7: Town water supply pipe sizing</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 400,000 inhabitants, 6.4 km away, 25 m head, 180 L/day/person, half pumped in 8 hours, f = 0.03. Find pipe size.</p>
+                <div class="formula">Daily = 72,000 m³ · Half = 36,000 m³ in 28,800 s → Q = 1.25 m³/s</div>
+                <div class="formula">25 = 0.03 × (6400/D) × (1.5915/D²)²/19.62 → D⁵ = 0.9916 → D = 1 m</div>
+                <p class="answer">Answer: D = 1 m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q8: Campus water supply pipe sizing</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 5000 inhabitants, 4 km away, 200 L/day/person, half pumped in 10 hours, head loss = 20 m, f = 0.032. Find pipe size.</p>
+                <div class="formula">Daily = 1000 m³ · Half = 500 m³ in 36,000 s → Q = 0.01389 m³/s</div>
+                <div class="formula">20 = 0.032 × (4000/D) × (0.01768/D²)²/19.62 → D⁵ = 1.02×10⁻⁴ → D = 0.158 m</div>
+                <p class="answer">Answer: D = 160 mm</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example: Pipes in series and parallel</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 2 pipes (40 cm and 20 cm diameter, each 300 m long) connected in series, discharge = 0.1 m³/s, f = 0.0075. Find head loss. What if connected in parallel?</p>
+                <div class="formula"><strong>Series:</strong> V₁ = 0.796 m/s, V₂ = 3.18 m/s</div>
+                <div class="formula">h<sub>f1</sub> = 0.1816 m · h<sub>f2</sub> = 5.798 m · Total ≈ 6.15 m</div>
+                <div class="formula"><strong>Parallel:</strong> V₁ = 0.553 m/s, V₂ = 0.391 m/s · h<sub>f</sub> = 0.088 m</div>
+                <p class="answer">Answer: Series: 6.15 m, Parallel: 0.088 m</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 7: CH 7 WATER HAMMER ============ -->
+    <div id="tab7" class="section">
+        <h2>💧 Chapter 7 – Pressure Wave, Water Hammer</h2>
+
+        <details class="collapsible" open>
+            <summary>Practice Q1: Valve closure (slow vs rapid)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe diameter = 50 cm, length = 100 m, discharge = 0.5 m³/s. Sonic velocity = 1430 m/s. Find pressure rise for (i) closure in 1 s, (ii) instantaneous closure.</p>
+                <div class="formula">V = 0.5/(π(0.5)²/4) = 2.546 m/s · t<sub>c</sub> = 2L/C = 2×100/1430 = 0.1398 s</div>
+                <div class="formula">(i) Slow (t > t<sub>c</sub>): Δp = 2ρLV/t = 509,200 Pa = 509.3 kPa</div>
+                <div class="formula">(ii) Rapid (t < t<sub>c</sub>): Δp = ρCV = 3.64×10⁶ Pa = 3.64 MPa</div>
+                <p class="answer">Answer: (i) 509.3 kPa, (ii) 3.64 MPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2: Steel pipe water hammer</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Diameter = 900 mm, Q = 1.5 m³/s, wall thickness = 1 cm, E<sub>steel</sub> = 2×10¹¹ Pa, K<sub>water</sub> = 2.1×10⁹ Pa, length = 3.5 km, closure time = 3.5 s. Find pressure increase.</p>
+                <div class="formula">V = 1.5/(π(0.9)²/4) = 2.36 m/s</div>
+                <div class="formula">C = √[(K/ρ)/(1 + KD/Et)] = √[(2.1×10⁶)/(1 + 0.945)] = 1039 m/s</div>
+                <div class="formula">t<sub>c</sub> = 2×3500/1039 = 6.74 s · Since t = 3.5 s < t<sub>c</sub>, rapid closure</div>
+                <div class="formula">Δp = ρCV = 1000 × 1039 × 2.36 = 2.45×10⁶ Pa = 2.45 MPa</div>
+                <p class="answer">Answer: Δp = 2.45 MPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q3: Pipeline valve closure</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Pipe length = 1.5 km, diameter = 150 mm, thickness = 5 mm, velocity = 3 m/s, E<sub>steel</sub> = 210 GPa, E<sub>water</sub> = 2.1 GPa. Find pressure increase for sudden closure.</p>
+                <div class="formula">C = √[(2.1×10⁹/1000)/(1 + (2.1×10⁹×0.15)/(210×10⁹×0.005))] = √(2.1×10⁶/1.3) = 1271 m/s</div>
+                <div class="formula">Δp = ρCV = 1000 × 1271 × 3 = 3.81×10⁶ Pa = 3.81 MPa</div>
+                <p class="answer">Answer: Δp = 3.81 MPa</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5: Reservoir discharge (two closure times)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Velocity = 2 m/s, diameter = 100 cm, length = 2500 m, thickness = 2.5 cm, K<sub>water</sub> = 2 GPa, E<sub>steel</sub> = 200 GPa, ρ = 1000 kg/m³. Find water hammer pressure for (a) t = 1 s, (b) t = 8 s.</p>
+                <div class="formula">C = √[(2×10⁹/1000)/(1 + (2×10⁹×1)/(200×10⁹×0.025))] = √(2×10⁶/1.4) = 1195 m/s</div>
+                <div class="formula">t<sub>c</sub> = 2×2500/1195 = 4.18 s</div>
+                <div class="formula">(a) t = 1 s < t<sub>c</sub>: Δp = ρCV = 2.39 MPa</div>
+                <div class="formula">(b) t = 8 s > t<sub>c</sub>: Δp = 2ρLV/t = 1.25 MPa</div>
+                <p class="answer">Answer: (a) 2.39 MPa, (b) 1.25 MPa</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============ TAB 8: CH 8 DRAG ============ -->
+    <div id="tab8" class="section">
+        <h2>🌬️ Chapter 8 – Flow Over Bodies (Drag & Boundary Layers)</h2>
+
+        <details class="collapsible" open>
+            <summary>Example 1: Car drag coefficient</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Car at 1 atm, 25°C, 90 km/h. Height = 1.40 m, width = 1.65 m. Drag force = 350 N. Find drag coefficient.</p>
+                <div class="formula">ρ = 1.164 kg/m³ · V = 90/3.6 = 25 m/s · A = 1.40 × 1.65 = 2.31 m²</div>
+                <div class="formula">C<sub>D</sub> = 2F<sub>D</sub>/(ρAV²) = 2×350/(1.164×2.31×25²) = 0.42</div>
+                <p class="answer">Answer: C<sub>D</sub> = 0.42</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Example 2: Flat plate drag (oil)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Engine oil at 40°C flows over 5‑m long flat plate at 2 m/s. Find drag force per unit width. ρ = 876 kg/m³, ν = 2.485×10⁻⁴ m²/s.</p>
+                <div class="formula">Re<sub>L</sub> = VL/ν = 2×5/2.485×10⁻⁴ = 40,241 → laminar</div>
+                <div class="formula">C<sub>f</sub> = 1.33/√Re<sub>L</sub> = 1.33/√40241 = 0.00662</div>
+                <div class="formula">F<sub>D</sub> = C<sub>f</sub>A(ρV²/2) = 0.00662 × 5 × (876×4/2) = 58.0 N</div>
+                <p class="answer">Answer: F<sub>D</sub> = 58.0 N per unit width</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q1: Circular sign drag & moment</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Sign diameter = 50 cm, wind = 150 km/h, 10°C, 100 kPa. Find drag force and bending moment.</p>
+                <div class="formula">ρ = 100/(0.287×283) = 1.231 kg/m³ · V = 150/3.6 = 41.67 m/s · A = π(0.5)²/4 = 0.1963 m²</div>
+                <div class="formula">F<sub>D</sub> = 1.1 × 0.1963 × (1.231×41.67²/2) = 231 N</div>
+                <div class="formula">M = F<sub>D</sub> × L = 231 × (1.5 + 0.25) = 404 N·m</div>
+                <p class="answer">Answer: F<sub>D</sub> = 231 N, M = 404 N·m</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q2: RV tank drag power</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Cylindrical tank 2 m long, 0.5 m diameter on RV at 95 km/h. Air at 87 kPa, 20°C. Find additional power for (a) circular faces front/back, (b) circular faces sides.</p>
+                <div class="formula">ρ = 87/(0.287×295) = 1.028 kg/m³ · V = 95/3.6 = 26.39 m/s</div>
+                <div class="formula">(a) C<sub>D</sub> = 0.9, A = 0.1963 m² → F<sub>D</sub> = 63.3 N · P = 1.67 kW</div>
+                <div class="formula">(b) C<sub>D</sub> = 0.8, A = 1 m² → F<sub>D</sub> = 286 N · P = 7.55 kW</div>
+                <p class="answer">Answer: (a) 1.67 kW, (b) 7.55 kW</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q3: Plastic sphere terminal velocity</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 4‑mm diameter plastic sphere (ρ = 1150 kg/m³) dropped into water at 20°C. Find terminal velocity. ρ<sub>water</sub> = 998 kg/m³, μ = 1.002×10⁻³ kg/m·s, C<sub>D</sub> = 0.5.</p>
+                <div class="formula">V = √[4gD(ρ<sub>s</sub>/ρ<sub>f</sub> – 1)/(3C<sub>D</sub>)]</div>
+                <div class="formula">V = √[4×9.81×0.004×(1150/998 – 1)/(3×0.5)] = 0.126 m/s</div>
+                <div class="formula">Re = 998 × 0.126 × 0.004 / 1.002×10⁻³ = 503 → laminar</div>
+                <p class="answer">Answer: V = 0.126 m/s</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q4: Submarine power (seawater vs air)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Ellipsoid submarine, diameter = 5 m, length = 25 m. Cruise at 40 km/h. Find power in (a) seawater (ρ = 1025 kg/m³), (b) air (ρ = 1.30 kg/m³).</p>
+                <div class="formula">V = 40/3.6 = 11.11 m/s · A = π(5)²/4 = 19.63 m² · C<sub>D</sub> = 0.1</div>
+                <div class="formula">(a) F<sub>D</sub> = 0.1×19.63×(1025×11.11²/2) = 124,200 N · P = 1380 kW</div>
+                <div class="formula">(b) F<sub>D</sub> = 0.1×19.63×(1.30×11.11²/2) = 158 N · P = 1.75 kW</div>
+                <p class="answer">Answer: (a) 1380 kW, (b) 1.75 kW</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q5: Flat plate in Denver (two orientations)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Air at 83.4 kPa, 25°C, 6 m/s over 2.5 m × 8 m flat plate. Find drag force for flow parallel to (a) 8‑m side, (b) 2.5‑m side. μ = 1.849×10⁻⁵ kg/m·s, ρ = 0.975 kg/m³.</p>
+                <div class="formula">(a) L = 8 m: Re<sub>L</sub> = 0.975×6×8/1.849×10⁻⁵ = 2.53×10⁶</div>
+                <div class="formula">C<sub>f</sub> = 0.074/Re<sub>L</sub><sup>0.2</sup> – 1742/Re<sub>L</sub> = 0.00245 · F<sub>D</sub> = 0.86 N</div>
+                <div class="formula">(b) L = 2.5 m: Re<sub>L</sub> = 7.91×10⁵ · C<sub>f</sub> = 0.00157 · F<sub>D</sub> = 0.55 N</div>
+                <p class="answer">Answer: (a) 0.86 N, (b) 0.55 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q6: Train car drag</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Train top surface 3.2 m wide, 8 m long, moving at 70 km/h. Air at 1 atm, 25°C. Find drag force. ρ = 1.184 kg/m³, ν = 1.562×10⁻⁵ m²/s.</p>
+                <div class="formula">V = 70/3.6 = 19.44 m/s · Re<sub>L</sub> = 19.44×8/1.562×10⁻⁵ = 9.96×10⁶</div>
+                <div class="formula">C<sub>f</sub> = 0.074/(9.96×10⁶)<sup>0.2</sup> = 0.00315</div>
+                <div class="formula">F<sub>D</sub> = 0.00315×25.6×(1.184×19.44²/2) = 18.0 N</div>
+                <p class="answer">Answer: F<sub>D</sub> = 18.0 N</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q7: Flat plate balance (additional mass)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> 50 cm × 50 cm plate balanced by 2 kg counterweight. Air at 1 atm, 25°C, 10 m/s downward over both surfaces. Find additional mass needed. ρ = 1.184 kg/m³, ν = 1.562×10⁻⁵ m²/s.</p>
+                <div class="formula">Re<sub>L</sub> = 10×0.5/1.562×10⁻⁵ = 3.2×10⁵ → laminar</div>
+                <div class="formula">C<sub>f</sub> = 1.33/√(3.2×10⁵) = 0.00235</div>
+                <div class="formula">F<sub>D</sub> = 0.00235×0.5×(1.184×100/2) = 0.0696 N</div>
+                <div class="formula">m = F<sub>D</sub>/g = 0.0696/9.81 = 0.0071 kg = 7.1 g</div>
+                <p class="answer">Answer: 7.1 g</p>
+            </div>
+        </details>
+
+        <details class="collapsible">
+            <summary>Practice Q8: Doubling velocity (laminar flat plate)</summary>
+            <div class="collapsible-content">
+                <p><strong>Problem:</strong> Laminar flow over flat plate. Free‑stream velocity doubled. Find change in drag force.</p>
+                <div class="formula">For laminar: F<sub>D</sub> ∝ V<sup>3/2</sup></div>
+                <div class="formula">F<sub>D,new</sub>/F<sub>D,old</sub> = 2<sup>3/2</sup> = 2.83</div>
+                <p class="answer">Answer: Drag increases by 183% (factor of 2.83)</p>
+            </div>
+        </details>
+    </div>
+
+    <footer>
+        ⚡ Every example from your notes · Practice these until you can solve them without looking · Good luck! 🍀
+    </footer>
+</div>
+
+<script>
+    (function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.section');
+
+        function activateTab(tabId) {
+            tabs.forEach(btn => btn.classList.remove('active'));
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            const activeSection = document.getElementById(tabId);
+            if (activeBtn) activeBtn.classList.add('active');
+            if (activeSection) activeSection.classList.add('active');
+        }
+
+        tabs.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                activateTab(tabId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // ensure first tab is active on load
+        const firstActive = document.querySelector('.tab-btn.active');
+        if (firstActive) {
+            activateTab(firstActive.getAttribute('data-tab'));
+        } else {
+            activateTab('tab1');
+        }
+    })();
+</script>
+</body>
+</html>

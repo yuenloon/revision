@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluid Mechanics — Learn From Zero</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    background: #f5f9ff;
+    color: #1a2b3c;
+    line-height: 1.6;
+    padding: 1.5rem;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 {
+    font-size: 2.1rem; color: #0b3b5c;
+    border-left: 8px solid #2a7faa; padding-left: 1.1rem; margin-bottom: 0.3rem;
+  }
+  .subhead { color: #2c4a66; margin: 0 0 1.5rem 1.9rem; font-size: 1rem; }
+  h2 {
+    font-size: 1.5rem; margin: 2.2rem 0 0.9rem; color: #1b4e6b;
+    border-bottom: 3px solid #b3d9f0; padding-bottom: 0.3rem;
+  }
+  h3 { font-size: 1.15rem; margin: 1.2rem 0 0.6rem; color: #1f5e7e; }
+  p { margin-bottom: 0.7rem; }
+  .lesson {
+    background: #fff; border: 1px solid #d9e9f5; border-radius: 14px;
+    padding: 1.2rem 1.4rem; margin: 1rem 0; box-shadow: 0 4px 12px rgba(0,30,50,0.05);
+  }
+  .formula {
+    background: #f0f7fe; border-left: 5px solid #2a7faa;
+    padding: 0.8rem 1.1rem; font-family: 'Courier New', monospace;
+    font-size: 1.05rem; border-radius: 0 10px 10px 0; margin: 0.7rem 0; overflow-x: auto;
+  }
+  .note {
+    background: #fff9e0; border-left: 5px solid #e6b800;
+    padding: 0.7rem 1.1rem; border-radius: 0 10px 10px 0; margin: 0.8rem 0; font-size: 0.95rem;
+  }
+  .analogy {
+    background: #eefaf0; border-left: 5px solid #3fae5c;
+    padding: 0.7rem 1.1rem; border-radius: 0 10px 10px 0; margin: 0.8rem 0; font-size: 0.95rem;
+  }
+  .example {
+    background: #e6f3fa; border-radius: 12px; padding: 0.9rem 1.2rem;
+    margin: 0.9rem 0; border: 1px solid #b8d6e9;
+  }
+  .example strong { color: #0f4b6b; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+  th { background: #2a7faa; color: white; padding: 0.55rem 0.75rem; text-align: left; font-weight: 500; }
+  td, th { border: 1px solid #bdd7e7; padding: 0.55rem 0.75rem; }
+  tr:nth-child(even) { background: #f6fbfe; }
+  .quiz {
+    background: #fdf3f9; border: 1px solid #f0c9de; border-radius: 14px;
+    padding: 1.2rem 1.4rem; margin: 1rem 0;
+  }
+  .quiz button {
+    background: #d76b9e; color: white; border: none; padding: 0.5rem 1.1rem;
+    border-radius: 30px; cursor: pointer; font-size: 0.9rem; margin-top: 0.5rem;
+  }
+  .quiz button:hover { background: #c4568a; }
+  .quiz-answer {
+    display: none; margin-top: 0.8rem; padding: 0.7rem 1rem;
+    background: #fff; border-radius: 8px; border: 1px solid #f0c9de;
+  }
+  .collapsible {
+    background: #eef5fa; border-radius: 12px; margin: 1rem 0; border: 1px solid #c2d9e9;
+  }
+  .collapsible summary {
+    padding: 1rem 1.2rem; font-weight: 600; cursor: pointer; color: #1b4e6b;
+    list-style: none; display: flex; align-items: center;
+  }
+  .collapsible summary::before {
+    content: "▶"; font-size: 0.8rem; margin-right: 0.8rem; transition: 0.2s;
+  }
+  .collapsible[open] summary::before { transform: rotate(90deg); }
+  .collapsible summary::-webkit-details-marker { display: none; }
+  .collapsible-content { padding: 0 1.2rem 1.2rem; border-top: 1px solid #d4e4f0; }
+  .step { margin: 0.5rem 0 0.5rem 1rem; }
+  .badge {
+    display: inline-block; background: #2a7faa; color: white; font-size: 0.7rem;
+    font-weight: 600; padding: 0.2rem 0.7rem; border-radius: 30px; margin-right: 0.4rem;
+  }
+  .toc { background: #fff; border-radius: 14px; padding: 1.2rem 1.5rem; border: 1px solid #d9e9f5; margin-bottom: 1.5rem; }
+  .toc a { color: #1b6a94; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc ol { margin-left: 1.3rem; }
+  footer { margin-top: 3rem; text-align: center; font-size: 0.9rem; color: #5d7f99; border-top: 1px solid #d0e0ed; padding-top: 1.5rem; }
+  @media (max-width: 700px) { h1 { font-size: 1.5rem; } body { padding: 0.8rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌊 Fluid Mechanics — Learn From Zero</h1>
+  <div class="subhead">A ground-up guide, built to match your test's style of questions</div>
+
+  <div class="toc">
+    <strong>What's inside:</strong>
+    <ol>
+      <li><a href="#basics">The basics — what even is a fluid?</a></li>
+      <li><a href="#pressure">Pressure & hydrostatics</a></li>
+      <li><a href="#forces">Forces on surfaces & buoyancy</a></li>
+      <li><a href="#bernoulli">Flow, continuity & Bernoulli</a></li>
+      <li><a href="#momentum">Momentum equation</a></li>
+      <li><a href="#laminar">Laminar vs turbulent flow & pipe losses</a></li>
+      <li><a href="#hammer">Water hammer</a></li>
+      <li><a href="#drag">Drag & boundary layers</a></li>
+      <li><a href="#quizzes">Practice like the real test</a></li>
+    </ol>
+  </div>
+
+  <!-- ===================== SECTION 1: BASICS ===================== -->
+  <h2 id="basics">1. The basics — what even is a fluid?</h2>
+  <div class="lesson">
+    <p>A <strong>fluid</strong> is anything that flows and takes the shape of its container — both liquids (water, oil) and gases (air) count. The one thing that makes fluid mechanics different from solid mechanics: fluids can't resist a shearing force while standing still — they just keep deforming (flowing) instead.</p>
+    <div class="analogy">Think of pushing sideways on a brick (solid) vs pushing sideways on water in a bucket. The brick pushes back and stays put; the water just moves out of the way.</div>
+
+    <h3>Density (ρ) and Specific Gravity (SG)</h3>
+    <div class="formula">ρ = m / V  &nbsp;&nbsp;|&nbsp;&nbsp;  SG = ρ / ρ<sub>water</sub> &nbsp; (ρ<sub>water</sub> = 1000 kg/m³)</div>
+    <p>Density just tells you how "packed" the mass is. Specific gravity is a shortcut — it compares a fluid to water, so it has no units.</p>
+
+    <h3>Density of a gas (ideal gas law)</h3>
+    <div class="formula">ρ = P / (R T) &nbsp; [R<sub>air</sub> = 0.287 kPa·m³/(kg·K), T in Kelvin]</div>
+    <div class="example">
+      <strong>Worked example (matches typical test phrasing):</strong> "A room is 4 m × 5 m × 6 m at 100 kPa and 25°C. Find the density, specific gravity, and mass of the air."
+      <div class="step">Step 1 — convert T to Kelvin: 25 + 273.15 = 298.15 K</div>
+      <div class="step">Step 2 — plug into ρ = P/(RT): ρ = 100 / (0.287 × 298.15) = <strong>1.17 kg/m³</strong></div>
+      <div class="step">Step 3 — SG = 1.17 / 1000 = <strong>0.00117</strong></div>
+      <div class="step">Step 4 — Volume = 4×5×6 = 120 m³ → m = ρV = 1.17 × 120 = <strong class="answer" style="color:#0f6b3e;">140 kg</strong></div>
+    </div>
+    <div class="note"><strong>Test pattern to remember:</strong> "find density → SG → mass" is a very common 3-part question chain. Always do them in that order since each answer feeds the next.</div>
+  </div>
+
+  <!-- ===================== SECTION 2: PRESSURE ===================== -->
+  <h2 id="pressure">2. Pressure & hydrostatics</h2>
+  <div class="lesson">
+    <p><strong>Pressure</strong> is just force spread over an area (P = F/A). In a fluid at rest, pressure only depends on how deep you are — not on the shape of the container.</p>
+    <div class="formula">P = P<sub>atm</sub> + ρgh &nbsp;&nbsp; (this is "gauge pressure" + atmospheric = "absolute pressure")</div>
+    <div class="note"><strong>Gauge vs Absolute — the #1 mixed-up concept:</strong><br>
+      • <em>Gauge pressure</em> = ρgh only (measured relative to atmosphere, what a pressure gauge reads)<br>
+      • <em>Absolute pressure</em> = P<sub>atm</sub> + ρgh (measured from a true vacuum)<br>
+      If the question gives you P<sub>atm</sub>, it's almost always hinting that it wants the <em>absolute</em> answer too.
+    </div>
+
+    <div class="example">
+      <strong>Worked example — Manometer:</strong> "A manometer fluid has SG = 0.85. The column height is 55 cm, and atmospheric pressure is 96 kPa. Find the gauge and absolute pressure."
+      <div class="step">Step 1 — ρ = SG × 1000 = 850 kg/m³</div>
+      <div class="step">Step 2 — Gauge: P = ρgh = 850 × 9.81 × 0.55 = 4586 Pa = <strong>4.6 kPa</strong></div>
+      <div class="step">Step 3 — Absolute: 96 + 4.6 = <strong class="answer" style="color:#0f6b3e;">100.6 kPa</strong></div>
+    </div>
+
+    <h3>Pascal's Law — hydraulic lifts</h3>
+    <div class="formula">F₁ / A₁ = F₂ / A₂</div>
+    <p>Pressure applied anywhere in an enclosed fluid transmits equally everywhere. This is why a small force on a small piston can lift a huge weight on a big piston.</p>
+    <div class="example">
+      <strong>Worked example:</strong> "A hydraulic jack has a small piston of area 21 cm² and force 38 N. The large piston has area 100 cm². Find the output force."
+      <div class="step">F₂ = F₁ × (A₂/A₁) = 38 × (100/21) = <strong class="answer" style="color:#0f6b3e;">181 N</strong></div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 3: FORCES / BUOYANCY ===================== -->
+  <h2 id="forces">3. Forces on submerged surfaces & buoyancy</h2>
+  <div class="lesson">
+    <p>When a flat surface (a window, a dam wall, a gate) is submerged, water pushes on every point of it, but pressure increases with depth — so the push isn't uniform. We collapse all that push into one single equivalent force, F<sub>R</sub>, acting at one point, h<sub>p</sub> (the "centre of pressure").</p>
+    <div class="formula">F<sub>R</sub> = ρ g h<sub>c</sub> A &nbsp;&nbsp; (h<sub>c</sub> = depth to the <u>centroid</u> of the shape)</div>
+    <div class="formula">h<sub>p</sub> = h<sub>c</sub> + I<sub>c</sub> / (h<sub>c</sub> A) &nbsp; (centre of pressure is always slightly <em>below</em> the centroid)</div>
+    <div class="note">You'll need the second moment of area I<sub>c</sub> for common shapes — for a circle, I<sub>c</sub> = πD⁴/64; for a rectangle, I<sub>c</sub> = bh³/12. These are usually given on a formula sheet, but memorising the circle one is worth it since it appears often.</div>
+
+    <div class="example">
+      <strong>Worked example:</strong> "A circular window of diameter 0.3 m has its centre 5 m deep in seawater (SG 1.025). Find the resultant force and its location."
+      <div class="step">Step 1 — h<sub>c</sub> = 5 m (already given as the centre)</div>
+      <div class="step">Step 2 — A = πD²/4 = π(0.3)²/4 = 0.0707 m²</div>
+      <div class="step">Step 3 — ρ = 1025 kg/m³ → F<sub>R</sub> = 1025 × 9.81 × 5 × 0.0707 ≈ <strong>3550 N</strong></div>
+      <div class="step">Step 4 — I<sub>c</sub> = πD⁴/64 = π(0.3)⁴/64 = 3.98×10⁻⁴ m⁴</div>
+      <div class="step">Step 5 — h<sub>p</sub> = 5 + 3.98×10⁻⁴/(5×0.0707) ≈ <strong class="answer" style="color:#0f6b3e;">5.001 m</strong></div>
+    </div>
+    <div class="note">Notice h<sub>p</sub> barely moved from h<sub>c</sub> — that's normal for small shapes deep underwater. If a shape is close to the surface, the shift becomes much more noticeable, and a test may ask you to comment on why.</div>
+
+    <h3>Buoyancy (Archimedes' principle)</h3>
+    <div class="formula">F<sub>B</sub> = ρ<sub>fluid</sub> g V<sub>displaced</sub></div>
+    <p>An object submerged (or floating) in a fluid feels an upward push equal to the weight of the fluid it displaces. If you're weighing something with a scale while it's submerged, the true weight and the "apparent" (measured) weight differ by exactly F<sub>B</sub>.</p>
+    <div class="example">
+      <strong>Worked example:</strong> "A steel sphere of diameter 1 m (ρ = 8050 kg/m³) hangs from a scale. Find the tension in air, then find the tension when fully submerged in water."
+      <div class="step">Step 1 — V = (4/3)π(0.5)³ = 0.5236 m³</div>
+      <div class="step">Step 2 — Weight in air: W = ρ<sub>steel</sub> g V = 8050 × 9.81 × 0.5236 ≈ <strong>41.35 kN</strong></div>
+      <div class="step">Step 3 — Buoyant force: F<sub>B</sub> = 1000 × 9.81 × 0.5236 ≈ 5.14 kN</div>
+      <div class="step">Step 4 — Submerged tension: T = W − F<sub>B</sub> = 41.35 − 5.14 = <strong class="answer" style="color:#0f6b3e;">36.2 kN</strong></div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 4: BERNOULLI ===================== -->
+  <h2 id="bernoulli">4. Flow, continuity & Bernoulli's equation</h2>
+  <div class="lesson">
+    <p><strong>Continuity</strong> is just "conservation of mass" for a moving fluid: whatever mass flows in one end of a pipe must flow out the other end (assuming nothing is stored inside).</p>
+    <div class="formula">ρ₁A₁V₁ = ρ₂A₂V₂ &nbsp;&nbsp; → for incompressible flow: A₁V₁ = A₂V₂</div>
+    <div class="analogy">Squeeze a garden hose (reduce A) and the water shoots out faster (V increases) — that's continuity in action.</div>
+
+    <h3>Bernoulli's equation (the "energy conservation" of fluid flow)</h3>
+    <div class="formula">P/ρg + V²/2g + z = constant &nbsp; (along a streamline, no losses, steady, incompressible)</div>
+    <p>This says: pressure energy + kinetic energy + elevation energy stays the same as a fluid particle moves along, as long as nothing is adding/removing energy or losing it to friction.</p>
+    <div class="example">
+      <strong>Worked example — Torricelli's theorem:</strong> "A large tank has an opening 5 m below the free surface. Find the exit velocity."
+      <div class="step">Apply Bernoulli between the free surface (V≈0, P=atm) and the exit (P=atm): ½V² = gh</div>
+      <div class="step">V = √(2gh) = √(2 × 9.81 × 5) ≈ <strong class="answer" style="color:#0f6b3e;">9.9 m/s</strong></div>
+    </div>
+
+    <h3>Venturi meter — measuring flow rate</h3>
+    <div class="formula">Q = A₁ / √((A₁/A₂)² − 1) × √(2gh(ρ<sub>man</sub>/ρ − 1))</div>
+    <div class="note">This formula looks intimidating, but it's just Bernoulli + continuity combined for a pipe that narrows. In an exam, plug in carefully and don't rush the square roots.</div>
+    <div class="example">
+      <strong>Worked example:</strong> "A venturi meter has d₁ = 250 mm, d₂ = 100 mm, carries oil (SG 0.9), with a mercury manometer reading 0.63 m. Find Q."
+      <div class="step">A₁ = π(0.25)²/4 = 0.0491 m², A₂ = π(0.10)²/4 = 0.00785 m²</div>
+      <div class="step">Q = 0.0491/√((0.0491/0.00785)² − 1) × √(2×9.81×0.63×(13600/900 − 1)) ≈ <strong class="answer" style="color:#0f6b3e;">0.10 m³/s</strong></div>
+    </div>
+
+    <h3>Pitot-static tube — measuring air speed</h3>
+    <div class="formula">V = √(2 ρ<sub>water</sub> g h / ρ<sub>air</sub>)</div>
+    <div class="example">
+      <strong>Worked example:</strong> "A pitot tube in an airflow shows a manometer reading of h = 7.3 cm of water. Air density = 1.25 kg/m³. Find air velocity."
+      <div class="step">V = √(2 × 1000 × 9.81 × 0.073 / 1.25) ≈ <strong class="answer" style="color:#0f6b3e;">33.8 m/s</strong></div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 5: MOMENTUM ===================== -->
+  <h2 id="momentum">5. The momentum equation</h2>
+  <div class="lesson">
+    <p>Bernoulli is about energy; the momentum equation is about <strong>force</strong>. Whenever a fluid changes speed or direction (hits a plate, bends around an elbow, exits a jet), it takes a force to make that happen — and by Newton's 3rd law, the fluid pushes back with an equal and opposite force.</p>
+    <div class="formula">F = ṁ (V<sub>out</sub> − V<sub>in</sub>) &nbsp;&nbsp; where ṁ = ρQ = ρAV</div>
+    <div class="note"><strong>How to approach every momentum question:</strong>
+      <div class="step">1. Draw a control volume around the fluid.</div>
+      <div class="step">2. Pick a positive direction (usually the initial flow direction).</div>
+      <div class="step">3. List every force acting: pressure forces at inlet/outlet, and the unknown reaction force F<sub>R</sub>.</div>
+      <div class="step">4. Apply ΣF = ṁ(V<sub>out</sub> − V<sub>in</sub>) in each direction separately (x and z).</div>
+    </div>
+
+    <div class="example">
+      <strong>Worked example — jet on a flat plate:</strong> "A water jet of diameter 50 mm and velocity 18 m/s hits a stationary flat plate perpendicularly. Find the force on the plate."
+      <div class="step">A = π(0.05)²/4 = 1.963×10⁻³ m²</div>
+      <div class="step">F = ρAV² = 1000 × 1.963×10⁻³ × 18² ≈ <strong class="answer" style="color:#0f6b3e;">636 N</strong></div>
+    </div>
+
+    <div class="example">
+      <strong>Worked example — 90° elbow:</strong> "Water flows at 25 kg/s through a 10 cm diameter pipe with a 90° bend. Gauge pressure at inlet is 3.43 kPa. Find the anchoring force needed to hold the elbow."
+      <div class="step">V = ṁ/(ρA) = 25/(1000 × π×0.1²/4) = 3.18 m/s</div>
+      <div class="step">F<sub>Rx</sub> = −ṁV − P₁A₁ (x-direction, flow decelerated to zero then redirected)</div>
+      <div class="step">F<sub>Rz</sub> = ṁV (z-direction, flow accelerated from zero)</div>
+      <div class="step">Combine: F<sub>R</sub> = √(F<sub>Rx</sub>² + F<sub>Rz</sub>²) ≈ <strong class="answer" style="color:#0f6b3e;">133 N</strong></div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 6: LAMINAR/TURBULENT ===================== -->
+  <h2 id="laminar">6. Laminar vs turbulent flow & pipe losses</h2>
+  <div class="lesson">
+    <p><strong>Laminar</strong> flow moves in smooth, orderly layers (like honey). <strong>Turbulent</strong> flow is chaotic, with swirling eddies (like fast river rapids). The Reynolds number tells you which one you have.</p>
+    <div class="formula">Re = ρVD/μ = VD/ν</div>
+    <table>
+      <tr><th>Re value</th><th>Flow type</th></tr>
+      <tr><td>Re &lt; 2300</td><td>Laminar (smooth)</td></tr>
+      <tr><td>2300 &lt; Re &lt; 4000</td><td>Transitional</td></tr>
+      <tr><td>Re &gt; 4000</td><td>Turbulent (chaotic)</td></tr>
+    </table>
+    <div class="example">
+      <strong>Worked example:</strong> "Oil (ρ=860 kg/m³, μ=0.05 Pa·s) flows at 0.6 m/s through a 0.1 m diameter pipe. Is the flow laminar or turbulent?"
+      <div class="step">Re = 860 × 0.6 × 0.1 / 0.05 = <strong class="answer" style="color:#0f6b3e;">1032 → Laminar</strong></div>
+    </div>
+
+    <h3>Laminar pipe flow — Hagen-Poiseuille</h3>
+    <div class="formula">Q = ΔP π D⁴ / (128 μ L)</div>
+    <div class="example">
+      <strong>Worked example:</strong> "Oil flows through a horizontal 5 cm diameter pipe, 40 m long, with pressure drop 648 kPa. μ = 0.8 Pa·s. Find Q."
+      <div class="step">Q = 648000 × π × (0.05)⁴ / (128 × 0.8 × 40) ≈ <strong class="answer" style="color:#0f6b3e;">0.00311 m³/s</strong></div>
+    </div>
+
+    <h3>Head loss in pipes — Darcy-Weisbach</h3>
+    <div class="formula">h<sub>f</sub> = f (L/D)(V²/2g)</div>
+    <div class="example">
+      <strong>Worked example:</strong> "Water flows at 1 m/s through a 500 mm pipe, 1.5 km long, friction factor f = 0.02. Find the head loss."
+      <div class="step">h<sub>f</sub> = 0.02 × (1500/0.5) × (1²/(2×9.81)) ≈ <strong class="answer" style="color:#0f6b3e;">3.06 m</strong></div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 7: WATER HAMMER ===================== -->
+  <h2 id="hammer">7. Water hammer</h2>
+  <div class="lesson">
+    <p>When a valve closes suddenly on a flowing pipe, the fluid can't stop instantly — this creates a pressure spike that travels back through the pipe as a shock wave. This is "water hammer," and the maths depends on whether the closure is fast or slow relative to how long it takes the pressure wave to travel down and back.</p>
+    <div class="formula">t<sub>c</sub> = 2L / C &nbsp; (critical time — the round trip of the pressure wave)</div>
+    <div class="formula">Rapid closure (t &lt; t<sub>c</sub>): &nbsp; Δp = ρ C V</div>
+    <div class="formula">Slow closure (t &gt; t<sub>c</sub>): &nbsp; Δp = 2ρLV / t</div>
+    <div class="example">
+      <strong>Worked example:</strong> "A 50 cm diameter, 100 m long pipe carries 0.5 m³/s of water. Wave speed C = 1430 m/s. A valve closes in 1 second. Find the pressure rise."
+      <div class="step">V = Q/A = 0.5/(π×0.25²) ≈ 2.546 m/s</div>
+      <div class="step">t<sub>c</sub> = 2×100/1430 = 0.14 s → since 1 s &gt; 0.14 s, this is <strong>slow closure</strong></div>
+      <div class="step">Δp = 2×1000×100×2.546/1 ≈ <strong class="answer" style="color:#0f6b3e;">509 kPa</strong></div>
+    </div>
+    <div class="note">Always check t vs t<sub>c</sub> first — using the wrong formula (rapid instead of slow) is the most common mistake here, and it gives an answer many times too large.</div>
+  </div>
+
+  <!-- ===================== SECTION 8: DRAG ===================== -->
+  <h2 id="drag">8. Drag & boundary layers</h2>
+  <div class="lesson">
+    <p>When an object moves through a fluid (or fluid flows past it), the fluid resists that motion — this resistance is <strong>drag</strong>.</p>
+    <div class="formula">F<sub>D</sub> = C<sub>D</sub> A ρV² / 2</div>
+    <p>C<sub>D</sub> (drag coefficient) depends on shape — a flat plate has a different C<sub>D</sub> than a sphere or a car body. It's usually given in the question or a table.</p>
+    <div class="example">
+      <strong>Worked example:</strong> "A car has frontal area 2.31 m², travels at 25 m/s in air (ρ=1.164 kg/m³) and experiences 350 N of drag. Find C<sub>D</sub>."
+      <div class="step">C<sub>D</sub> = 2F<sub>D</sub>/(Aρ V²) = 2×350/(2.31×1.164×25²) ≈ <strong class="answer" style="color:#0f6b3e;">0.42</strong></div>
+    </div>
+
+    <h3>Flat-plate friction drag</h3>
+    <div class="formula">Laminar: C<sub>f</sub> = 1.33/√Re<sub>L</sub> &nbsp;&nbsp;|&nbsp;&nbsp; Turbulent: C<sub>f</sub> = 0.074/Re<sub>L</sub><sup>1/5</sup></div>
+
+    <h3>Terminal velocity of a settling sphere</h3>
+    <div class="formula">V = √[ 4gD(ρ<sub>s</sub>/ρ<sub>f</sub> − 1) / (3C<sub>D</sub>) ]</div>
+    <div class="example">
+      <strong>Worked example:</strong> "A 4 mm sphere (ρ=1150 kg/m³) settles through water (ρ=998 kg/m³), C<sub>D</sub>=0.5. Find terminal velocity."
+      <div class="step">V = √[4×9.81×0.004×(1150/998 −1)/(3×0.5)] ≈ <strong class="answer" style="color:#0f6b3e;">0.126 m/s</strong></div>
+    </div>
+    <div class="note">"Terminal velocity" means the sphere has stopped accelerating — drag force exactly balances the net weight (weight minus buoyancy). That's the physical idea behind the formula.</div>
+  </div>
+
+  <!-- ===================== FORMULA SHEET ===================== -->
+  <h2>📋 One-page formula recap</h2>
+  <div class="lesson">
+    <table>
+      <tr><th>Topic</th><th>Formula</th></tr>
+      <tr><td>Density / SG</td><td>ρ = m/V, SG = ρ/ρ<sub>water</sub></td></tr>
+      <tr><td>Gas density</td><td>ρ = P/(RT)</td></tr>
+      <tr><td>Hydrostatic pressure</td><td>P = P<sub>atm</sub> + ρgh</td></tr>
+      <tr><td>Force on submerged surface</td><td>F<sub>R</sub> = ρgh<sub>c</sub>A, h<sub>p</sub> = h<sub>c</sub> + I<sub>c</sub>/(h<sub>c</sub>A)</td></tr>
+      <tr><td>Buoyancy</td><td>F<sub>B</sub> = ρ<sub>fluid</sub>gV<sub>displaced</sub></td></tr>
+      <tr><td>Continuity</td><td>ρ₁A₁V₁ = ρ₂A₂V₂</td></tr>
+      <tr><td>Bernoulli</td><td>P/ρg + V²/2g + z = const</td></tr>
+      <tr><td>Momentum</td><td>F = ṁ(V<sub>out</sub> − V<sub>in</sub>)</td></tr>
+      <tr><td>Reynolds number</td><td>Re = ρVD/μ (lam &lt; 2300, turb &gt; 4000)</td></tr>
+      <tr><td>Pipe head loss</td><td>h<sub>f</sub> = f(L/D)(V²/2g)</td></tr>
+      <tr><td>Laminar pipe flow</td><td>Q = ΔPπD⁴/(128μL)</td></tr>
+      <tr><td>Water hammer</td><td>Δp = ρCV (rapid), Δp = 2ρLV/t (slow)</td></tr>
+      <tr><td>Drag force</td><td>F<sub>D</sub> = C<sub>D</sub>AρV²/2</td></tr>
+    </table>
+  </div>
+
+  <!-- ===================== QUIZ SECTION ===================== -->
+  <h2 id="quizzes">🎯 Practice like the real test</h2>
+  <p style="margin-bottom:1rem;">Try these before looking at the answer. Each mirrors the style/numbers-flavor of the worked examples above.</p>
+
+  <div class="quiz">
+    <strong>Q1.</strong> A tank of glycerin (SG = 1.26) has a depth of 3 m. Atmospheric pressure is 101 kPa. Find the absolute pressure at the bottom.
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">ρ = 1260 kg/m³ → P<sub>gauge</sub> = 1260×9.81×3 = 37.07 kPa → P<sub>abs</sub> = 101 + 37.07 = <strong>138.1 kPa</strong></div>
+  </div>
+
+  <div class="quiz">
+    <strong>Q2.</strong> A rectangular gate 2 m wide × 1.5 m tall is vertical, with its top edge at the water surface. Find the resultant hydrostatic force.
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">h<sub>c</sub> = 1.5/2 = 0.75 m, A = 2×1.5 = 3 m² → F<sub>R</sub> = 1000×9.81×0.75×3 ≈ <strong>22.1 kN</strong></div>
+  </div>
+
+  <div class="quiz">
+    <strong>Q3.</strong> A wooden block (ρ=600 kg/m³) of volume 0.2 m³ floats in water. What fraction of its volume is submerged?
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">Floating → weight = buoyancy: ρ<sub>wood</sub>Vg = ρ<sub>water</sub>V<sub>sub</sub>g → V<sub>sub</sub>/V = ρ<sub>wood</sub>/ρ<sub>water</sub> = 600/1000 = <strong>0.6 (60% submerged)</strong></div>
+  </div>
+
+  <div class="quiz">
+    <strong>Q4.</strong> Water flows through a pipe that narrows from 20 cm to 10 cm diameter. If velocity in the wide section is 2 m/s, find the velocity in the narrow section.
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">A₁V₁=A₂V₂ → V₂ = V₁(D₁/D₂)² = 2×(20/10)² = <strong>8 m/s</strong></div>
+  </div>
+
+  <div class="quiz">
+    <strong>Q5.</strong> A jet of water (d = 40 mm, V = 20 m/s) strikes a stationary flat plate head-on. Find the force on the plate.
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">A = π(0.04)²/4 = 1.257×10⁻³ m² → F = ρAV² = 1000×1.257×10⁻³×20² = <strong>503 N</strong></div>
+  </div>
+
+  <div class="quiz">
+    <strong>Q6.</strong> Water (ν = 1×10⁻⁶ m²/s) flows at 0.3 m/s through a 40 mm diameter pipe. Determine whether the flow is laminar or turbulent.
+    <br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button>
+    <div class="quiz-answer">Re = VD/ν = 0.3×0.04/1×10⁻⁶ = <strong>12,000 → Turbulent</strong> (well above 4000)</div>
+  </div>
+
+  <div class="note" style="margin-top:1.5rem;">
+    <strong>Before the test, make sure you can:</strong>
+    <div class="step">✔ Convert units without hesitating (mm→m, cm²→m², L/s→m³/s)</div>
+    <div class="step">✔ Tell gauge vs absolute pressure apart instantly</div>
+    <div class="step">✔ Know when to use Bernoulli (no losses) vs when to add h<sub>f</sub></div>
+    <div class="step">✔ Draw a control volume before every momentum question</div>
+    <div class="step">✔ Check Re before choosing laminar or turbulent formulas</div>
+    <div class="step">✔ Check t vs t<sub>c</sub> before choosing the water hammer formula</div>
+  </div>
+
+  <footer>⚡ Built from your compiled notes — walk through each worked example by hand at least once, then try the quiz section closed-book. Good luck! 🍀</footer>
+</div>
+</body>
+</html>
