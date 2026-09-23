@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuiz Etika &amp; Peradaban — Nota Tambahan</title>
+<style>
+  :root{
+    --bg:#eef2f9; --card:#fff; --ink:#1c2434; --muted:#5b6883;
+    --primary:#3b3fb6; --primary-soft:#e7e8ff;
+    --teal:#0e8a7d; --teal-soft:#e0f5f2;
+    --amber:#b45309; --amber-soft:#fef3c7;
+    --red:#c0392b; --red-soft:#fdecea;
+    --green:#15803d; --green-soft:#dcfce7;
+    --line:#dbe2ef;
+    --shadow:0 4px 14px rgba(28,36,52,.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    background:linear-gradient(135deg,#2c2f8f,#0e8a7d);
+    color:#fff; padding:22px 18px 18px; text-align:center;
+  }
+  header h1{margin:0 0 4px; font-size:1.4rem; letter-spacing:.3px;}
+  header p{margin:0; opacity:.9; font-size:.88rem;}
+
+  main{max-width:900px; margin:0 auto; padding:18px 14px 70px;}
+
+  .card{
+    background:var(--card); border-radius:14px; padding:18px 20px;
+    margin-bottom:16px; box-shadow:var(--shadow); border:1px solid #e8edf7;
+  }
+  .card h2{
+    margin:0 0 12px; font-size:1.02rem; color:var(--primary);
+    display:flex; align-items:center; gap:8px;
+    border-bottom:2px solid var(--primary-soft); padding-bottom:8px;
+  }
+  .card h2 .num{
+    background:var(--primary); color:#fff; width:26px; height:26px;
+    border-radius:8px; display:inline-flex; align-items:center;
+    justify-content:center; font-size:.8rem; flex:0 0 auto;
+  }
+
+  /* ---------- SETUP CHIPS ---------- */
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;}
+  .chip{
+    border:1.5px solid var(--line); background:#fff; color:var(--muted);
+    padding:8px 15px; border-radius:999px; font-size:.83rem;
+    font-weight:600; cursor:pointer; transition:.16s; font-family:inherit;
+  }
+  .chip:hover{border-color:var(--primary); color:var(--primary); background:var(--primary-soft);}
+  .chip.active{background:var(--primary); border-color:var(--primary); color:#fff;}
+  .chip .cnt{opacity:.65; font-weight:500; margin-left:4px;}
+
+  .btn{
+    border:none; background:var(--primary); color:#fff; padding:11px 22px;
+    border-radius:10px; font-size:.9rem; font-weight:700; cursor:pointer;
+    transition:.18s; font-family:inherit;
+  }
+  .btn:hover{filter:brightness(1.1);}
+  .btn.ghost{background:#fff; color:var(--primary); border:1.5px solid var(--primary);}
+  .btn.small{padding:7px 14px; font-size:.82rem;}
+  .btn:disabled{opacity:.45; cursor:not-allowed; filter:none;}
+
+  /* ---------- QUIZ ---------- */
+  .qmeta{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:.82rem; color:var(--muted); font-weight:600; margin-bottom:8px;
+    gap:8px; flex-wrap:wrap;
+  }
+  .progress{height:8px; background:#e3e8f3; border-radius:99px; overflow:hidden; margin-bottom:16px;}
+  .progress > div{height:100%; width:0; background:linear-gradient(90deg,#2c2f8f,#0e8a7d); transition:width .3s;}
+
+  .topic-badge{
+    display:inline-block; background:var(--teal-soft); color:var(--teal);
+    font-size:.7rem; font-weight:700; padding:3px 10px; border-radius:999px;
+    letter-spacing:.3px; text-transform:uppercase; margin-bottom:10px;
+  }
+
+  .qtext{font-size:1.02rem; font-weight:700; margin-bottom:14px; line-height:1.5;}
+  .opts{display:flex; flex-direction:column; gap:9px;}
+  .opt{
+    text-align:left; background:#fff; border:1.5px solid var(--line);
+    border-radius:11px; padding:12px 14px; font-size:.9rem; cursor:pointer;
+    transition:.15s; color:var(--ink); font-family:inherit; line-height:1.45;
+  }
+  .opt:hover:not(:disabled){border-color:var(--primary); background:var(--primary-soft);}
+  .opt:disabled{cursor:default;}
+  .opt.correct{background:var(--green-soft); border-color:var(--green); color:#14532d; font-weight:600;}
+  .opt.wrong{background:var(--red-soft); border-color:var(--red); color:#7f1d1d;}
+  .opt .letter{font-weight:800; margin-right:8px; color:var(--primary);}
+  .opt.correct .letter{color:var(--green);}
+  .opt.wrong .letter{color:var(--red);}
+
+  .feedback{margin-top:14px; padding:12px 14px; border-radius:10px; font-size:.87rem; display:none;}
+  .feedback.show{display:block;}
+  .feedback.ok{background:var(--green-soft); border-left:4px solid var(--green);}
+  .feedback.no{background:var(--red-soft); border-left:4px solid var(--red);}
+
+  .quiz-actions{margin-top:18px; display:flex; justify-content:space-between; gap:10px; align-items:center;}
+
+  /* ---------- RESULT ---------- */
+  .result{text-align:center; padding:14px 0 6px;}
+  .score-big{font-size:3.2rem; font-weight:800; color:var(--primary); line-height:1;}
+  .score-sub{color:var(--muted); font-size:.9rem; margin-top:8px;}
+  .score-bar{height:10px; background:#e3e8f3; border-radius:99px; overflow:hidden; margin:18px 0 4px;}
+  .score-bar > div{height:100%; background:linear-gradient(90deg,#2c2f8f,#0e8a7d);}
+
+  .review{margin-top:22px; text-align:left;}
+  .review h3{
+    color:var(--red); font-size:.85rem; text-transform:uppercase;
+    letter-spacing:.5px; margin-bottom:10px;
+  }
+  .review-item{
+    background:#fdf7f7; border-left:4px solid var(--red);
+    border-radius:0 10px 10px 0; padding:11px 14px; margin-bottom:10px; font-size:.85rem;
+  }
+  .review-item .rq{font-weight:700; margin-bottom:5px; line-height:1.45;}
+  .review-item .rt{font-size:.7rem; text-transform:uppercase; color:var(--muted); font-weight:700; letter-spacing:.4px; margin-bottom:4px;}
+  .review-item .ra{color:var(--green); font-weight:600;}
+  .review-item .ry{color:var(--red);}
+
+  .box{
+    border-left:4px solid var(--teal); background:var(--teal-soft);
+    padding:11px 14px; border-radius:0 10px 10px 0; margin:12px 0; font-size:.88rem;
+  }
+  .box.tip{border-color:var(--primary); background:var(--primary-soft);}
+  .box.warn{border-color:var(--amber); background:var(--amber-soft);}
+
+  @media(max-width:560px){
+    header h1{font-size:1.12rem;}
+    .card{padding:15px;}
+    .score-big{font-size:2.6rem;}
+    .chip{padding:7px 12px; font-size:.78rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎯 Kuiz Etika &amp; Peradaban — Nota Tambahan</h1>
+  <p id="headerSub">Memuatkan soalan…</p>
+</header>
+
+<main>
+
+<!-- ============ SETUP SCREEN ============ -->
+<div id="setupScreen">
+  <div class="card">
+    <h2><span class="num">1</span> Pilih Topik</h2>
+    <div class="chips" id="topicChips"></div>
+
+    <h2><span class="num">2</span> Bilangan Soalan</h2>
+    <div class="chips" id="countChips"></div>
+
+    <div class="box tip" id="setupInfo">Pilih topik dan bilangan soalan, kemudian tekan <b>Mula Kuiz</b>.</div>
+
+    <div style="text-align:center; margin-top:6px;">
+      <button class="btn" id="startBtn">🚀 Mula Kuiz</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📌 Panduan Pantas</h2>
+    <div class="box">
+      <b>Cara guna:</b><br>
+      • Pilih <b>Semua Topik</b> untuk kuiz penuh, atau fokus satu topik sahaja.<br>
+      • Pilihan jawapan akan <b>dirawak</b> setiap kali — jadi hafal konsep, bukan kedudukan jawapan.<br>
+      • Selepas menjawab, anda akan nampak penjelasan ringkas.<br>
+      • Di akhir kuiz, semak semula soalan yang salah.
+    </div>
+    <div class="box warn">
+      <b>Topik liputan:</b> Kerangka analisis • Peringkat etika • Etika individu/masyarakat/negara/sejagat • Prinsip etika • Tamadun Melayu &amp; Alam Melayu • Pemikiran Eropah • Agama &amp; kepercayaan • Kolonialisme &amp; pasca-kolonialisme • Timur vs Barat &amp; kebangkitan Islam • Pembinaan negara.
+    </div>
+  </div>
+</div>
+
+<!-- ============ QUIZ SCREEN ============ -->
+<div id="quizScreen" style="display:none;">
+  <div class="card">
+    <div class="qmeta">
+      <span id="qNum">Soalan 1</span>
+      <span id="qScore">Markah: 0</span>
+    </div>
+    <div class="progress"><div id="qBar"></div></div>
+    <div class="topic-badge" id="qTopic"></div>
+    <div class="qtext" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="feedback" id="qFeedback"></div>
+    <div class="quiz-actions">
+      <button class="btn ghost small" id="quitBtn">← Keluar</button>
+      <button class="btn" id="qNext" style="display:none;">Seterusnya →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="resultScreen" style="display:none;">
+  <div class="card" id="resultCard"></div>
+</div>
+
+</main>
+
+<script>
+/* =====================================================
+   BANK SOALAN
+   t = topik, q = soalan, o = pilihan, a = indeks jawapan betul, e = penjelasan
+   ===================================================== */
+var QUESTIONS = [
+
+/* ---------- 1. KERANGKA & PERINGKAT ETIKA ---------- */
+{t:"Kerangka & Peringkat Etika",
+ q:"Tiga faktor utama dalam kerangka menganalisis etika dan peradaban (acuan Malaysia) ialah…",
+ o:["Sejarah, Struktur Sosial, Biografi","Agama, Bahasa, Budaya","Ekonomi, Politik, Sosial","Individu, Keluarga, Negara"],
+ a:0, e:"Kerangka analisis etika peradaban acuan Malaysia = Sejarah + Struktur Sosial + Biografi."},
+
+{t:"Kerangka & Peringkat Etika",
+ q:"Dalam kerangka analisis etika, apakah yang dimaksudkan dengan 'biografi'?",
+ o:["Riwayat hidup seseorang yang membentuk etika","Buku catatan sejarah negara","Dokumen perlembagaan","Senarai tokoh penting"],
+ a:0, e:"Biografi = riwayat hidup (keluarga, komuniti, masyarakat) yang membentuk etika seseorang; berkait rapat dengan struktur sosial dan proses sejarah."},
+
+{t:"Kerangka & Peringkat Etika",
+ q:"Perbezaan etika antara masyarakat bandar dan luar bandar adalah kesan daripada faktor…",
+ o:["Struktur sosial","Biografi","Pasaran","Etiket"],
+ a:0, e:"Perbezaan struktur (bandar vs luar bandar) mempengaruhi etika dan penggunaan bahasa — ini di bawah faktor struktur sosial."},
+
+{t:"Kerangka & Peringkat Etika",
+ q:"Aliran peringkat penghayatan etika yang betul ialah…",
+ o:["Individu → Keluarga → Komuniti → Masyarakat","Masyarakat → Komuniti → Keluarga → Individu","Keluarga → Individu → Negara → Masyarakat","Komuniti → Individu → Keluarga → Masyarakat"],
+ a:0, e:"Individu → Keluarga → Komuniti → Masyarakat (Lokal/Global)."},
+
+{t:"Kerangka & Peringkat Etika",
+ q:"Apakah unit asas dalam pembentukan etika?",
+ o:["Individu","Keluarga","Komuniti","Negara"],
+ a:0, e:"Individu ialah unit asas. Etika dibina oleh individu, dipengaruhi keluarga dan komuniti."},
+
+{t:"Kerangka & Peringkat Etika",
+ q:"Perbandingan etika kerja orang Jepun dengan orang Malaysia menunjukkan pengaruh…",
+ o:["Norma dan penerimaan majoriti masyarakat setempat","Undang-undang antarabangsa","Sistem kasta","Perlembagaan negara"],
+ a:0, e:"Etika baik/buruk ditentukan oleh norma dan penerimaan majoriti masyarakat setempat — contoh etika kerja Jepun vs Malaysia."},
+
+/* ---------- 2. ETIKA INDIVIDU / MASYARAKAT / NEGARA / SEJAGAT ---------- */
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Etika individu boleh ditakrifkan sebagai…",
+ o:["Falsafah/cara pemikiran peribadi berteraskan prinsip, nilai dan kepercayaan","Peraturan formal yang dikuatkuasakan negara","Panduan moral yang diterima majoriti masyarakat","Etika yang diterima di peringkat antarabangsa"],
+ a:0, e:"Etika individu = falsafah/cara pemikiran peribadi berteraskan prinsip, nilai dan kepercayaan; menjadi panduan tingkah laku."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Contoh pemilihan jodoh menggambarkan perubahan etika individu, iaitu…",
+ o:["Dahulu diatur keluarga, kini pilihan sendiri tetapi masih dipengaruhi keluarga/komuniti","Kini sepenuhnya diatur keluarga","Tidak pernah berubah sejak dahulu","Ditentukan oleh undang-undang negara"],
+ a:0, e:"Dahulu pemilihan jodoh diatur keluarga; kini menjadi pilihan sendiri tetapi masih dipengaruhi keluarga dan komuniti."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Etika masyarakat bersifat…",
+ o:["Tempatan — berbeza antara satu masyarakat dengan masyarakat lain","Sejagat — sama di seluruh dunia","Mutlak dan tidak berubah","Ditetapkan oleh PBB"],
+ a:0, e:"Etika masyarakat bersifat tempatan dan boleh berubah mengikut peredaran zaman."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Amalan membuka kasut sebelum masuk rumah di Malaysia berbanding Timur Tengah ialah contoh…",
+ o:["Etika masyarakat","Etika negara","Etika sejagat","Etiket antarabangsa"],
+ a:0, e:"Ia panduan moral yang diterima masyarakat setempat — contoh etika masyarakat."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Etika negara berlandaskan…",
+ o:["Perlembagaan dan undang-undang (Berillo, 1995)","Adat resam semata-mata","Piagam PBB 1948","Norma masyarakat setempat sahaja"],
+ a:0, e:"Etika negara = nilai etika dan moral yang wajib dipatuhi seluruh rakyat, berlandaskan perlembagaan dan undang-undang (Berillo, 1995)."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Apakah fungsi utama etika negara?",
+ o:["Alat kawalan sosial untuk kestabilan, pembangunan dan perpaduan","Menghapuskan adat resam","Menggantikan peranan agama","Menjamin kebebasan mutlak rakyat"],
+ a:0, e:"Etika negara berfungsi sebagai alat kawalan sosial untuk kestabilan, pembangunan dan perpaduan."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Antara berikut, yang manakah BUKAN penunjuk etika negara?",
+ o:["Kekayaan individu","Keadilan","Integriti","Toleransi"],
+ a:0, e:"Penunjuk etika negara: pembangunan, keadilan, keamanan, kemakmuran, integriti, toleransi."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Etika sejagat diterima di peringkat antarabangsa dan pada 2019 dianggotai oleh berapa negara melalui PBB?",
+ o:["195 negara","100 negara","150 negara","250 negara"],
+ a:0, e:"PBB (2019) — 195 negara menerima etika sejagat."},
+
+{t:"Etika Individu, Masyarakat, Negara & Sejagat",
+ q:"Apakah bentuk konflik antara etika negara dengan etika sejagat?",
+ o:["Kedaulatan negara vs hak asasi manusia","Bahasa vs budaya","Ekonomi vs pendidikan","Agama vs sains"],
+ a:0, e:"Etika sejagat kadang bercanggah dengan etika negara — contoh kedaulatan negara vs hak asasi manusia. Individu perlu bijak mengimbangi."},
+
+/* ---------- 3. PRINSIP-PRINSIP ETIKA ---------- */
+{t:"Prinsip-Prinsip Etika",
+ q:"Menurut prinsip kebaikan dan keburukan, manusia rasional secara fitrahnya cenderung kepada…",
+ o:["Kebaikan kerana ia membawa kesejahteraan","Keburukan kerana ia menguntungkan","Kedua-duanya sama sahaja","Kuasa dan kekayaan"],
+ a:0, e:"Manusia rasional cenderung kepada kebaikan; kebaikan membawa kesejahteraan, keburukan membawa kemudaratan."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Prinsip keadilan dan saksama bermaksud…",
+ o:["Meletakkan sesuatu pada tempatnya","Memberi sama rata kepada semua tanpa mengira keperluan","Mengikut kehendak majoriti","Mengutamakan golongan kaya"],
+ a:0, e:"Keadilan & saksama = meletakkan sesuatu pada tempatnya; keadilan membawa keseimbangan."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Apakah perbezaan antara kesaksamaan (equality) dan keadilan (equity)?",
+ o:["Kesaksamaan = sama rata; Keadilan = mengikut keperluan","Kesaksamaan = mengikut keperluan; Keadilan = sama rata","Kedua-duanya sama maksud","Kesaksamaan untuk individu; Keadilan untuk negara sahaja"],
+ a:0, e:"Kesaksamaan (equality) = sama rata; Keadilan (equity) = mengikut keperluan sebenar."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Doktor memberikan dos ubat yang berbeza kepada pesakit sakit ringan dan sakit teruk. Ini menunjukkan…",
+ o:["Keadilan (equity) mengikut keperluan, bukan kesaksamaan semata-mata","Pilih kasih dalam rawatan","Pelanggaran etika perubatan","Etika sejagat tidak dipatuhi"],
+ a:0, e:"Memberi dos sama rata tidak adil jika keperluan berbeza. Ini contoh keadilan (equity) berbanding kesaksamaan."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Prinsip kejujuran menekankan keselarasan antara…",
+ o:["Niat, pertuturan dan perbuatan","Kaya, miskin dan sederhana","Raja, pembesar dan rakyat","Undang-undang, adat dan budaya"],
+ a:0, e:"Kejujuran = berlaku lurus dan benar dari segi niat, pertuturan dan perbuatan; konsisten antara kata dan tindakan."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Menurut prinsip kebebasan, apakah yang akan berlaku jika kebebasan tidak dikawal?",
+ o:["Kekacauan (anarki)","Kemakmuran","Kestabilan politik","Perpaduan kaum"],
+ a:0, e:"Kebebasan bukan mutlak. Jika tidak dikawal, ia membawa kepada kekacauan (anarki)."},
+
+{t:"Prinsip-Prinsip Etika",
+ q:"Kejujuran merupakan asas kepada…",
+ o:["Kepercayaan, martabat dan integriti","Kekayaan dan kuasa","Kepantasan dan kecekapan","Kebebasan mutlak"],
+ a:0, e:"Kejujuran adalah asas kepada kepercayaan, martabat dan integriti — penting untuk pemimpin dan negara."},
+
+/* ---------- 4. TAMADUN MELAYU & ALAM MELAYU ---------- */
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Kerajaan Funan dipercayai diasaskan oleh raja Brahmin pertama bernama…",
+ o:["Vydphura","Dapunta Hyang","Jayavarman II","Raden Vijaya"],
+ a:0, e:"Funan — raja Brahmin pertama Vydphura; pusat perdagangan antara Mekong dan Semenanjung Tanah Melayu."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Kerajaan Champa (Chu-Lien, 192 AD) menerima pengaruh…",
+ o:["Hindu","Kristian","Islam","Buddhisme Mahayana"],
+ a:0, e:"Champa menerima pengaruh Hindu dan sering berperang dengan Vietnam."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Srivijaya diasaskan oleh Dapunta Hyang pada tahun…",
+ o:["683 AD","192 AD","1511","1641"],
+ a:0, e:"Srivijaya diasaskan Dapunta Hyang (683 AD) dan menjadi pusat perdagangan maritim utama."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Kerajaan Angkor diasaskan oleh…",
+ o:["Jayavarman II","Raden Vijaya","Patih Gajah Mada","Vydphura"],
+ a:0, e:"Angkor diasaskan Jayavarman II; bersifat Hindu-Buddha dan merupakan empayar besar di Kemboja."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Majapahit dikaitkan dengan tokoh…",
+ o:["Raden Vijaya dan Patih Gajah Mada","Jayavarman II dan Vydphura","Dapunta Hyang dan Chu-Lien","Salahuddin dan Attaturk"],
+ a:0, e:"Majapahit diasaskan Raden Vijaya, dengan Patih Gajah Mada sebagai tokoh terkenal; berasaskan pertanian dan perdagangan."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Apakah keistimewaan Kedah Tua?",
+ o:["Entrepot tertua di Asia Tenggara, mempunyai aktiviti peleburan besi","Pusat penyebaran Kristian","Kerajaan pertama memeluk Islam","Pangkalan lanun terkenal"],
+ a:0, e:"Kedah Tua = entrepot tertua di Asia Tenggara; aktiviti peleburan besi; perdagangan dengan India, China dan Arab."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Gangga Negara (kurun ke-6 hingga ke-11) terkenal sebagai…",
+ o:["Pangkalan lanun dan pusat perdagangan","Pusat pengajian Islam","Ibu kota Srivijaya","Pusat penyebaran Hindu"],
+ a:0, e:"Gangga Negara (kurun 6–11) dikenali sebagai pangkalan lanun dan pusat perdagangan."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Antara berikut, yang manakah tergolong dalam rumpun Austronesia?",
+ o:["Jawa, Sunda, Madura, Aceh, Minangkabau, Bugis","Arab, Parsi, Turki, Mesir","Portugis, Belanda, British","Cina, India, Siam"],
+ a:0, e:"Rumpun Austronesia: Jawa, Sunda, Madura, Aceh, Minangkabau, Bugis — sebahagian elemen tamadun Melayu."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Konsep 'devaraja' dalam pemerintahan Melayu lama merupakan pengaruh daripada…",
+ o:["India (Hindu-Buddha)","China","Islam","Barat"],
+ a:0, e:"Pengaruh India/Hindu-Buddha merangkumi bahasa, makanan, adat, seni, agama, konsep politik (devaraja) dan kesusasteraan."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Karya kesusasteraan India yang mempengaruhi alam Melayu ialah…",
+ o:["Mahabharata dan Ramayana","Hikayat Hang Tuah dan Sejarah Melayu","Nicomachean Ethics dan The Republic","Al-Quran dan Hadith"],
+ a:0, e:"Mahabharata dan Ramayana adalah karya kesusasteraan India yang mempengaruhi alam Melayu."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Islam mula tiba di alam Melayu dan tersebar luas melalui…",
+ o:["Pedagang (tiba abad ke-8, tersebar abad ke-12)","Penjajah Portugis","Tentera Salib","Mubaligh British"],
+ a:0, e:"Islam tiba abad ke-8 dan tersebar luas pada abad ke-12 melalui pedagang."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Antara berikut, yang manakah hasil undang-undang Islam di Melaka?",
+ o:["Hukum Kanun Melaka dan Undang-undang Laut Melaka","Perlembagaan Persekutuan","Piagam PBB","Undang-undang Inggeris"],
+ a:0, e:"Hukum Kanun Melaka dan Undang-undang Laut Melaka adalah hasil pelaksanaan syariah di Melaka."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Apakah kesan kedatangan Islam terhadap pemikiran masyarakat Melayu?",
+ o:["Menekankan Tawhid, pemikiran rasional/intelektual dan keadilan sosial","Menolak sepenuhnya ilmu dunia","Menghapuskan sistem perdagangan","Menggalakkan sistem kasta"],
+ a:0, e:"Islam menekankan Tawhid, pemikiran rasional/intelektual dan keadilan sosial."},
+
+{t:"Tamadun Melayu & Alam Melayu",
+ q:"Antara berikut, yang manakah BUKAN nilai etika sosial Melayu selepas kedatangan Islam?",
+ o:["Individualisme melampau","Gotong-royong","Silaturahim","Bermesyuarah"],
+ a:0, e:"Nilai etika sosial Melayu: adat resam, hormat orang tua, silaturahim, keramahan, bermesyuarah, gotong-royong, rendah diri dan kesopanan."},
+
+/* ---------- 5. PEMIKIRAN EROPAH ---------- */
+{t:"Pemikiran Eropah",
+ q:"Zaman Pra-Pencerahan (Zaman Gelap) dicirikan oleh…",
+ o:["Wabak, peperangan, penguasaan gereja dan kepercayaan tahyul","Kemajuan sains dan teknologi","Kebebasan berfikir sepenuhnya","Kemunculan demokrasi moden"],
+ a:0, e:"Zaman Gelap: wabak, perang, penguasaan 'old regime' gereja dan kepercayaan tahyul."},
+
+{t:"Pemikiran Eropah",
+ q:"Apakah ciri utama Renaissance (abad ke-14 hingga ke-16)?",
+ o:["Penemuan semula rasionalisme Islam dan penekanan kepada potensi manusia (Humanisme)","Penguasaan penuh gereja dalam semua bidang","Kemunculan revolusi industri","Penjajahan Afrika"],
+ a:0, e:"Renaissance = penemuan semula rasionalisme Islam, mencabar penguasaan gereja, dan memberi tumpuan kepada potensi manusia (Humanisme)."},
+
+{t:"Pemikiran Eropah",
+ q:"Zaman Pencerahan (abad ke-17 hingga ke-18) menyaksikan kebangkitan…",
+ o:["Rasionalisme dan sekularisme","Feudalisme","Sistem kasta","Animisme"],
+ a:0, e:"Zaman Pencerahan (Age of Reason) — kebangkitan rasionalisme dan sekularisme (pemisahan agama dan negara)."},
+
+{t:"Pemikiran Eropah",
+ q:"Tokoh yang mengemukakan idea pengasingan kuasa (separation of powers) ialah…",
+ o:["Montesquieu","Voltaire","John Locke","Jean Rousseau"],
+ a:0, e:"Montesquieu — pengasingan kuasa. Tokoh lain: Voltaire, John Locke, Jean Rousseau."},
+
+{t:"Pemikiran Eropah",
+ q:"Revolusi Perancis (1789) memperjuangkan…",
+ o:["Liberty, Equality, Fraternity, Nasionalisme dan Demokrasi","Kekayaan, Kuasa, Monarki","Kasta, Adat, Tradisi","Sains, Teknologi, Industri"],
+ a:0, e:"Revolusi Perancis 1789 — Liberty, Equality, Fraternity, Nasionalisme, Demokrasi."},
+
+{t:"Pemikiran Eropah",
+ q:"Revolusi Industri membawa perubahan daripada sistem merkantilisme kepada…",
+ o:["Kapitalisme, globalisasi dan pengeluaran massa","Feudalisme","Sistem barter","Sistem kasta"],
+ a:0, e:"Revolusi Industri: peralihan kepada kapitalisme, globalisasi, pengeluaran massa dan era digital (IR 5.0)."},
+
+/* ---------- 6. AGAMA & KEPERCAYAAN ---------- */
+{t:"Agama & Kepercayaan",
+ q:"Buddhisme tiba di Kedah (Lembah Bujang) melalui…",
+ o:["Pedagang India, menggantikan kepercayaan animisme","Penjajah Portugis","Pedagang Arab","Mubaligh British"],
+ a:0, e:"Buddhisme tiba di Kedah (Lembah Bujang) melalui pedagang India dan menggantikan animisme."},
+
+{t:"Agama & Kepercayaan",
+ q:"Apakah maksud 'Samsara' dalam Buddhisme?",
+ o:["Penderitaan dan kelahiran semula","Pembebasan mutlak","Hukum sebab akibat","Sistem kasta"],
+ a:0, e:"Samsara = penderitaan/kelahiran semula. Dharma (Four Noble Truths, Eightfold Path) digunakan untuk mengatasinya."},
+
+{t:"Agama & Kepercayaan",
+ q:"Dharma dalam Buddhisme merangkumi…",
+ o:["Four Noble Truths dan Eightfold Path","Five Pillars dan Sunnah","Trimurti dan Moksha","Varna dan Karma"],
+ a:0, e:"Dharma = Four Noble Truths + Eightfold Path."},
+
+{t:"Agama & Kepercayaan",
+ q:"Apakah bilangan prinsip dalam 'Five Precepts' Buddhisme?",
+ o:["5","8","10","12"],
+ a:0, e:"Etika Buddhisme: 5 Precepts, 8 Precepts dan 10 Good Actions."},
+
+{t:"Agama & Kepercayaan",
+ q:"Hinduisme juga dikenali sebagai…",
+ o:["Sanatana Dharma dan Vaidika Dharma","Dharma dan Samsara","Tawhid dan Akhlak","Humanisme dan Sekularisme"],
+ a:0, e:"Hinduisme berasal dari India (Sungai Sindhu) dan dikenali sebagai Sanatana Dharma / Vaidika Dharma."},
+
+{t:"Agama & Kepercayaan",
+ q:"Dalam Hinduisme, apakah maksud 'Brahman'?",
+ o:["Realiti tertinggi (ultimate reality)","Tuhan berbilang","Hukum sebab akibat","Pembebasan"],
+ a:0, e:"Konsep Hinduisme: Brahman (realiti tertinggi), Trimurti, Karma, Dharma, Moksha."},
+
+{t:"Agama & Kepercayaan",
+ q:"Apakah maksud 'Moksha' dalam Hinduisme?",
+ o:["Pembebasan","Kelahiran semula","Kasta","Dosa"],
+ a:0, e:"Moksha = pembebasan (liberation)."},
+
+{t:"Agama & Kepercayaan",
+ q:"Sistem kasta dalam Hinduisme dikenali sebagai…",
+    o:["Varna","Karma","Dharma","Trimurti"],
+ a:0, e:"Sistem kasta Hinduisme dikenali sebagai Varna."},
+
+{t:"Agama & Kepercayaan",
+ q:"Tiga komponen utama ajaran Islam ialah…",
+ o:["Aqidah (iman), Fiqh (undang-undang) dan Akhlak (etika/moral)","Iman, Islam, Ihsan","Quran, Hadith, Ijmak","Tawhid, Fiqh, Sains"],
+ a:0, e:"Islam merangkumi Aqidah (faith), Fiqh (law) dan Akhlak (ethics/morality)."},
+
+{t:"Agama & Kepercayaan",
+ q:"Hadith yang menyatakan 'orang yang paling sempurna imannya ialah yang terbaik akhlaknya' menunjukkan…",
+ o:["Akhlak mencerminkan kekuatan iman seseorang","Iman tidak berkaitan dengan tingkah laku","Akhlak hanya untuk pemimpin","Ibadah lebih penting daripada akhlak"],
+ a:0, e:"Akhlak membentuk tingkah laku, mempengaruhi pertimbangan dan mencerminkan iman seseorang."},
+
+{t:"Agama & Kepercayaan",
+ q:"Kejatuhan Empayar Uthmaniyah dikaitkan dengan…",
+ o:["Kemerosotan akhlak (weak akhlak)","Kekurangan teknologi semata-mata","Kekurangan tenaga kerja","Ketiadaan sistem undang-undang"],
+ a:0, e:"Kemerosotan moral (akhlak lemah) membawa kepada kejatuhan tamadun — contoh Empayar Uthmaniyah."},
+
+{t:"Agama & Kepercayaan",
+ q:"Sinkretisme Buddhisme Cina dengan penyembahan nenek moyang dan Taoisme menunjukkan bahawa Buddhisme Cina…",
+ o:["Tidak bersifat eksklusif","Menolak semua amalan tempatan","Hanya untuk golongan atasan","Bercanggah dengan budaya Cina"],
+ a:0, e:"Buddhisme Mahayana di China bersifat sinkretisme (campuran) dengan amalan tradisional Cina dan tidak eksklusif."},
+
+/* ---------- 7. KOLONIALISME & PASCA-KOLONIALISME ---------- */
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Kolonialisme boleh ditakrifkan sebagai…",
+ o:["Sistem penguasaan sesebuah negara atas wilayah dan rakyat lain","Sistem perdagangan bebas antara negara","Sistem pendidikan moden","Sistem pemerintahan demokrasi"],
+ a:0, e:"Kolonialisme = sistem penguasaan negara atas wilayah/rakyat lain, sering dijustifikasikan sebagai keunggulan moral/etika."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Apakah kesan utama dasar British terhadap sistem pemerintahan di Tanah Melayu?",
+ o:["Pengenalan sekularisme — agama dipisahkan daripada politik","Pengukuhan sistem khalifah","Penghapusan institusi Sultan","Pengenalan sistem kasta"],
+ a:0, e:"British memperkenalkan sekularisme (memisahkan agama daripada politik) dan menguasai kuasa secara mutlak."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Di bawah pentadbiran British, Sultan dihadkan peranannya kepada…",
+ o:["Budaya dan Islam","Ekonomi dan perdagangan","Ketenteraan","Pendidikan sekular"],
+ a:0, e:"Sultan dihadkan kepada hal budaya dan Islam sahaja di bawah pentadbiran British."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Apakah kesan kolonialisme terhadap sistem tulisan di Tanah Melayu?",
+ o:["Tulisan Roman menggantikan tulisan Jawi","Tulisan Jawi menggantikan tulisan Roman","Tulisan Cina dijadikan rasmi","Tulisan Sanskrit diperkenalkan"],
+ a:0, e:"Tulisan Roman menggantikan Jawi — salah satu kesan kolonialisme terhadap sistem tulisan."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Pembentukan parti politik bersifat kaum (UMNO, MCA, MIC) adalah kesan…",
+ o:["Kolonialisme British","Kebangkitan Islam","Revolusi Perancis","Zaman Renaissance"],
+ a:0, e:"Pembentukan parti politik kaum (UMNO, MCA, MIC) adalah antara kesan kolonialisme British."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"British menggalakkan kemasukan buruh imigran Cina dan India untuk bekerja di…",
+ o:["Lombong bijih timah dan ladang getah","Sektor perbankan dan pendidikan","Kilang tekstil moden","Sektor ketenteraan"],
+ a:0, e:"Buruh imigran Cina dan India dibawa untuk lombong bijih timah dan ladang getah."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Apakah maksud 'super-diversity' dalam konteks pasca-kolonial Malaysia?",
+ o:["Campuran elemen Melayu-Islam, Barat, Cina dan India yang boleh mencetuskan ketegangan sosial","Kepelbagaian flora dan fauna","Sistem politik berbilang parti","Kepelbagaian bahasa tanpa konflik"],
+ a:0, e:"Peradaban pasca-kolonial Malaysia berasaskan elemen Melayu-Islam, Barat, Cina dan India — 'super-diversity' yang boleh menyebabkan ketegangan sosial."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Apakah cabaran utama pasca-kolonialisme di Malaysia?",
+ o:["Menerapkan etika moden Barat (sekularisme, liberalisme, kapitalisme) yang bercanggah dengan nilai tradisional","Kekurangan sumber alam","Ketiadaan sistem pendidikan","Kekurangan penduduk"],
+ a:0, e:"Cabaran pasca-kolonial: menerapkan etika moden Barat yang bercanggah dengan nilai tradisional tempatan."},
+
+{t:"Kolonialisme & Pasca-Kolonialisme",
+ q:"Sekolah vernakular dan perubahan demografi (kampung ke bandar) adalah kesan daripada…",
+ o:["Kolonialisme","Zaman Renaissance","Kebangkitan Islam","Revolusi Perancis"],
+ a:0, e:"Sekolah vernakular, peralihan demografi (kampung ke bandar) dan pembangunan infrastruktur adalah kesan kolonialisme."},
+
+/* ---------- 8. TIMUR vs BARAT & KEBANGKITAN ISLAM ---------- */
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Perang Salib melibatkan konflik antara Salahuddin al-Ayubi dengan…",
+ o:["Tentera Salib","Empayar Uthmaniyah","Kerajaan Srivijaya","Dinasti Ming"],
+ a:0, e:"Perang Salib: Salahuddin al-Ayubi vs tentera Salib."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Sistem Khalifah Uthmaniyah dihapuskan pada tahun 1924 oleh…",
+ o:["Mustafa Kamal Attaturk","Salahuddin al-Ayubi","Sultan Abdul Hamid","Ibn Khaldun"],
+ a:0, e:"Mustafa Kamal Attaturk menghapuskan sistem Khalifah Uthmaniyah pada 1924."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Apakah maksud 'Great Western World' dalam konteks peradaban moden?",
+ o:["Dominasi Barat dalam politik, ekonomi dan media","Penyatuan negara-negara Timur","Kebangkitan tamadun Islam","Perpaduan dunia Timur dan Barat"],
+ a:0, e:"Dominasi Barat dalam politik, ekonomi dan media — globalisasi menyebabkan krisis moral dan hakisan identiti Timur."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Apakah ciri utama Kaum Tua?",
+ o:["Konservatif, mengekalkan amalan lama dan menolak pembaharuan","Reformis dan menolak taklid","Dipengaruhi pemikiran Mesir dan Turki","Menekankan pemikiran rasional"],
+ a:0, e:"Kaum Tua: tradisional, konservatif, mengekalkan amalan lama, menolak pembaharuan; sering menuduh pihak lain bidaah dan khurafat."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Apakah ciri utama Kaum Muda?",
+ o:["Reformis — menekankan pemikiran rasional dan kembali kepada Quran & Sunnah","Konservatif dan menolak perubahan","Menentang pendidikan moden","Menolak sepenuhnya pengaruh luar"],
+ a:0, e:"Kaum Muda: reformis/modernis, menekankan pemikiran rasional, menolak taklid buta, kembali kepada Quran dan Sunnah."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Kaum Muda dipengaruhi oleh pemikiran dari…",
+ o:["Mesir, Arab Saudi dan India","Portugis, Belanda dan British","China dan Jepun","Amerika Syarikat dan Eropah"],
+ a:0, e:"Kaum Muda dipengaruhi pemikiran dari Timur Tengah (Mesir, Arab Saudi) dan India."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Apakah yang ditolak oleh Kaum Muda?",
+ o:["Taklid buta, bidaah dan khurafat","Al-Quran dan Sunnah","Pendidikan dan ilmu","Pemikiran rasional"],
+ a:0, e:"Kaum Muda menolak taklid (mengikut tanpa faham), bidaah dan khurafat."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Gerakan pelajar Islam di luar negara yang mempengaruhi kebangkitan Islam 1970-an ialah…",
+ o:["MISG dan FOSIS","ABIM dan Darul Arqam","UMNO dan MCA","Perikatan dan Barisan Nasional"],
+ a:0, e:"MISG (Malaysian Islamic Study Group) dan FOSIS (Federation of Students Islamic Societies) di UK/USA."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Revolusi Iran yang memberi impak kepada kebangkitan Islam di Malaysia berlaku pada tahun…",
+ o:["1979","1957","1969","1990"],
+ a:0, e:"Revolusi Iran (1979) memberi impak besar kepada kebangkitan Islam di Malaysia."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Antara berikut, yang manakah organisasi dakwah Islam di Malaysia?",
+ o:["ABIM dan Darul Arqam","MISG dan FOSIS","UMNO dan MIC","Perikatan dan DAP"],
+ a:0, e:"ABIM dan Darul Arqam adalah organisasi dakwah Islam yang muncul dalam kebangkitan Islam di Malaysia."},
+
+{t:"Timur vs Barat & Kebangkitan Islam",
+ q:"Antara berikut, yang manakah BUKAN kesan kebangkitan Islam 1970-an di Malaysia?",
+ o:["Penghapusan institusi Sultan","Islamisasi ilmu","Perbankan Islam","Perubahan dasar awam"],
+ a:0, e:"Kebangkitan Islam membawa islamisasi ilmu, perbankan Islam dan perubahan dasar awam (di bawah Tun Abdul Razak & Tun Dr. Mahathir)."},
+
+/* ---------- 9. PEMBINAAN NEGARA ---------- */
+{t:"Pembinaan Negara",
+ q:"Dalam pilihan raya 1955, parti yang menang dan memperjuangkan kemerdekaan ialah…",
+ o:["Perikatan","UMNO","Barisan Nasional","Parti Islam Se-Malaysia"],
+ a:0, e:"Pilihan raya 1955 — Perikatan menang; Tunku Abdul Rahman memperjuangkan kemerdekaan."},
+
+{t:"Pembinaan Negara",
+ q:"Perjanjian London 1956 menetapkan tarikh kemerdekaan pada…",
+ o:["31 Ogos 1957","31 Ogos 1956","16 September 1963","31 Julai 1957"],
+ a:0, e:"Perjanjian London 1956 menetapkan tarikh Merdeka pada 31 Ogos 1957."},
+
+{t:"Pembinaan Negara",
+ q:"Suruhanjaya Reid bertanggungjawab…",
+ o:["Menggubal perlembagaan berdasarkan 131 memorandum","Merundingkan kemerdekaan di London","Menubuhkan parti politik","Menetapkan dasar ekonomi"],
+ a:0, e:"Suruhanjaya Reid menggubal perlembagaan berdasarkan 131 memorandum."},
+
+{t:"Pembinaan Negara",
+ q:"Antara berikut, yang manakah BUKAN sebahagian daripada kontrak sosial?",
+ o:["Bahasa Inggeris sebagai bahasa rasmi","Hak istimewa orang Melayu","Islam sebagai agama rasmi","Kewarganegaraan untuk bukan Melayu (jus soli)"],
+ a:0, e:"Kontrak sosial: hak istimewa Melayu, Islam sebagai agama rasmi, bahasa Melayu sebagai bahasa kebangsaan, dan kewarganegaraan bukan Melayu (jus soli)."},
+
+{t:"Pembinaan Negara",
+ q:"Apakah mekanisme utama untuk memupuk semangat nasionalisme, patriotisme dan toleransi?",
+ o:["Pendidikan sejarah","Sistem perbankan","Perdagangan antarabangsa","Kemajuan teknologi"],
+ a:0, e:"Pendidikan sejarah ialah mekanisme untuk memupuk nasionalisme, patriotisme dan toleransi."},
+
+{t:"Pembinaan Negara",
+ q:"Dokumen/idea yang menjadi tonggak perpaduan lapisan masyarakat berbilang kaum di Malaysia ialah…",
+ o:["Rukun Negara dan Wawasan 2020","Piagam PBB dan Deklarasi HAM","The Republic dan Magna Moralia","Perjanjian London dan Reid Commission"],
+ a:0, e:"Rukun Negara dan Wawasan 2020 menjadi cita-cita untuk menyatukan lapisan masyarakat yang berbeza."},
+
+{t:"Pembinaan Negara",
+ q:"Menurut kesimpulan nota, apakah yang perlu dilakukan untuk menangani krisis moral dan identiti di Malaysia?",
+ o:["Kembali kepada nilai Timur/Islam (Akhlak) untuk menangani sekularisme, liberalisme dan pluralisme Barat","Mengabaikan nilai tradisional sepenuhnya","Mengutamakan kemajuan material semata-mata","Menolak semua pengaruh luar tanpa penilaian"],
+ a:0, e:"Penting kembali kepada nilai Timur/Islam (Akhlak) untuk menangani sekularisme, liberalisme dan pluralisme Barat, sambil mengimbangi kemajuan material dengan pembangunan etika dan rohani."},
+
+{t:"Pembinaan Negara",
+ q:"Antara berikut, yang manakah BUKAN elemen peradaban Timur?",
+    o:["Penekanan semata-mata kepada sains dan teknologi tanpa agama","Keseimbangan fizikal dan rohani","Penekanan kepada agama dan kerohanian","Tamadun Islam, Jepun, China dan India"],
+ a:0, e:"Peradaban Timur (Melayu, India, China, Jepun, Tamadun Islam) menekankan keseimbangan fizikal dan rohani. Peradaban Barat lebih menekankan sains, teknologi dan fizikal."}
+
+];
+
+/* =====================================================
+   STATE & UTILITIES
+   ===================================================== */
+var state = {
+  topic: 'ALL',
+  count: 'ALL',
+  pool: [],
+  idx: 0,
+  score: 0,
+  answered: false,
+  wrong: []
+};
+
+function shuffleArr(a){
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function getTopics(){
+  var list = [];
+  QUESTIONS.forEach(function(q){
+    if(list.indexOf(q.t) === -1) list.push(q.t);
+  });
+  return list;
+}
+
+/* Prepare a question with shuffled options */
+function prepareQuestion(item){
+  var opts = item.o.map(function(text, i){
+    return { text: text, correct: i === item.a };
+  });
+  shuffleArr(opts);
+  return { t: item.t, q: item.q, opts: opts, e: item.e };
+}
+
+/* =====================================================
+   SETUP SCREEN
+   ===================================================== */
+var topicChipsEl = document.getElementById('topicChips');
+var countChipsEl = document.getElementById('countChips');
+var setupInfoEl = document.getElementById('setupInfo');
+var startBtn = document.getElementById('startBtn');
+
+function buildSetup(){
+  // Topic chips
+  topicChipsEl.innerHTML = '';
+  var allChip = document.createElement('button');
+  allChip.className = 'chip active';
+  allChip.innerHTML = 'Semua Topik <span class="cnt">(' + QUESTIONS.length + ')</span>';
+  allChip.dataset.topic = 'ALL';
+  topicChipsEl.appendChild(allChip);
+
+  getTopics().forEach(function(t){
+    var n = QUESTIONS.filter(function(q){ return q.t === t; }).length;
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.innerHTML = t + ' <span class="cnt">(' + n + ')</span>';
+    b.dataset.topic = t;
+    topicChipsEl.appendChild(b);
+  });
+
+  // Count chips
+  countChipsEl.innerHTML = '';
+  ['10','20','30','ALL'].forEach(function(c){
+    var label = (c === 'ALL') ? 'Semua' : c + ' soalan';
+    var b = document.createElement('button');
+    b.className = 'chip' + (c === 'ALL' ? ' active' : '');
+    b.textContent = label;
+    b.dataset.count = c;
+    countChipsEl.appendChild(b);
+  });
+
+  updateSetupInfo();
+}
+
+function updateSetupInfo(){
+  var filtered = QUESTIONS.filter(function(q){
+    return state.topic === 'ALL' || q.t === state.topic;
+  });
+  var n = filtered.length;
+  var take = (state.count === 'ALL') ? n : Math.min(parseInt(state.count, 10), n);
+  var topicLabel = (state.topic === 'ALL') ? 'semua topik' : state.topic;
+  setupInfoEl.innerHTML = 'Anda akan menjawab <b>' + take + '</b> soalan daripada <b>' + topicLabel + '</b>. ' +
+    'Jumlah soalan tersedia: <b>' + n + '</b>.';
+  startBtn.disabled = (n === 0);
+}
+
+topicChipsEl.addEventListener('click', function(e){
+  var btn = e.target.closest('.chip');
+  if(!btn) return;
+  topicChipsEl.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  btn.classList.add('active');
+  state.topic = btn.dataset.topic;
+  updateSetupInfo();
+});
+
+countChipsEl.addEventListener('click', function(e){
+  var btn = e.target.closest('.chip');
+  if(!btn) return;
+  countChipsEl.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  btn.classList.add('active');
+  state.count = btn.dataset.count;
+  updateSetupInfo();
+});
+
+/* =====================================================
+   QUIZ ENGINE
+   ===================================================== */
+var setupScreen = document.getElementById('setupScreen');
+var quizScreen = document.getElementById('quizScreen');
+var resultScreen = document.getElementById('resultScreen');
+var resultCard = document.getElementById('resultCard');
+
+var qNumEl = document.getElementById('qNum');
+var qScoreEl = document.getElementById('qScore');
+var qBarEl = document.getElementById('qBar');
+var qTopicEl = document.getElementById('qTopic');
+var qTextEl = document.getElementById('qText');
+var qOptsEl = document.getElementById('qOpts');
+var qFbEl = document.getElementById('qFeedback');
+var qNextBtn = document.getElementById('qNext');
+var quitBtn = document.getElementById('quitBtn');
+
+startBtn.addEventListener('click', startQuiz);
+
+function startQuiz(){
+  var filtered = QUESTIONS.filter(function(q){
+    return state.topic === 'ALL' || q.t === state.topic;
+  });
+  shuffleArr(filtered);
+  if(state.count !== 'ALL'){
+    var n = parseInt(state.count, 10);
+    if(filtered.length > n) filtered = filtered.slice(0, n);
+  }
+
+  state.pool = filtered.map(prepareQuestion);
+  state.idx = 0;
+  state.score = 0;
+  state.answered = false;
+  state.wrong = [];
+
+  setupScreen.style.display = 'none';
+  resultScreen.style.display = 'none';
+  quizScreen.style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  renderQuestion();
+}
+
+function renderQuestion(){
+  state.answered = false;
+  var item = state.pool[state.idx];
+
+  qNumEl.textContent = 'Soalan ' + (state.idx + 1) + ' / ' + state.pool.length;
+  qScoreEl.textContent = 'Markah: ' + state.score;
+  qBarEl.style.width = (state.idx / state.pool.length * 100) + '%';
+  qTopicEl.textContent = item.t;
+  qTextEl.textContent = item.q;
+  qFbEl.className = 'feedback';
+  qFbEl.innerHTML = '';
+  qNextBtn.style.display = 'none';
+  qOptsEl.innerHTML = '';
+
+  var letters = ['A','B','C','D'];
+  item.opts.forEach(function(opt, i){
+    var b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="letter">' + letters[i] + '.</span>' + opt.text;
+    b.addEventListener('click', function(){ answerQuestion(i, b); });
+    qOptsEl.appendChild(b);
+  });
+}
+
+function answerQuestion(chosen, btnEl){
+  if(state.answered) return;
+  state.answered = true;
+
+  var item = state.pool[state.idx];
+  var buttons = qOptsEl.querySelectorAll('.opt');
+  var correctIdx = -1;
+  item.opts.forEach(function(o, i){ if(o.correct) correctIdx = i; });
+
+  buttons.forEach(function(b, i){
+    b.disabled = true;
+    if(i === correctIdx) b.classList.add('correct');
+  });
+
+  if(item.opts[chosen].correct){
+    state.score++;
+    qScoreEl.textContent = 'Markah: ' + state.score;
+    qFbEl.className = 'feedback show ok';
+    qFbEl.innerHTML = '✅ <b>Betul!</b> ' + item.e;
+  } else {
+    btnEl.classList.add('wrong');
+    state.wrong.push({
+      topic: item.t,
+      q: item.q,
+      correct: item.opts[correctIdx].text,
+      yours: item.opts[chosen].text
+    });
+    qFbEl.className = 'feedback show no';
+    qFbEl.innerHTML = '❌ <b>Salah.</b> Jawapan betul: <b>' + item.opts[correctIdx].text + '</b><br>' + item.e;
+  }
+
+  qNextBtn.style.display = 'inline-block';
+  qNextBtn.textContent = (state.idx === state.pool.length - 1) ? 'Lihat Keputusan 🏁' : 'Seterusnya →';
+}
+
+qNextBtn.addEventListener('click', function(){
+  if(state.idx < state.pool.length - 1){
+    state.idx++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+});
+
+quitBtn.addEventListener('click', function(){
+  if(confirm('Keluar dari kuiz? Markah semasa akan hilang.')){
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'none';
+    setupScreen.style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+});
+
+/* =====================================================
+   RESULT SCREEN
+   ===================================================== */
+function showResults(){
+  var total = state.pool.length;
+  var pct = Math.round(state.score / total * 100);
+
+  var msg, color;
+  if(pct >= 90){ msg = '🌟 Cemerlang! Anda sudah bersedia untuk ujian.'; color = 'var(--green)'; }
+  else if(pct >= 75){ msg = '👍 Bagus! Ulang kaji bahagian yang salah sahaja.'; color = 'var(--teal)'; }
+  else if(pct >= 60){ msg = '📖 Boleh lagi — fokus pada topik yang lemah.'; color = 'var(--amber)'; }
+  else { msg = '💪 Jangan putus asa! Baca semula nota, kemudian cuba lagi.'; color = 'var(--red)'; }
+
+  var reviewHTML = '';
+  if(state.wrong.length > 0){
+    reviewHTML += '<div class="review"><h3>Semak Semula (' + state.wrong.length + ' salah)</h3>';
+    state.wrong.forEach(function(w){
+      reviewHTML +=
+        '<div class="review-item">' +
+          '<div class="rt">' + w.topic + '</div>' +
+          '<div class="rq">' + w.q + '</div>' +
+          '<div>Jawapan anda: <span class="ry">' + w.yours + '</span></div>' +
+          '<div class="ra">✔ Betul: ' + w.correct + '</div>' +
+        '</div>';
+    });
+    reviewHTML += '</div>';
+  } else {
+    reviewHTML = '<div class="review"><div class="review-item" style="background:#dcfce7;border-color:#15803d;">' +
+      '<div class="rq" style="margin:0;">🎉 Tiada kesalahan! Sempurna!</div></div></div>';
+  }
+
+  resultCard.innerHTML =
+    '<div class="result">' +
+      '<div class="score-big" style="color:' + color + ';">' + state.score + ' / ' + total + '</div>' +
+      '<div class="score-bar"><div style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+      '<div class="score-sub"><b>' + pct + '%</b> &nbsp;•&nbsp; ' + msg + '</div>' +
+    '</div>' +
+    reviewHTML +
+    '<div style="text-align:center; margin-top:22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">' +
+      '<button class="btn" id="retrySame">🔄 Ulang Kuiz Sama</button>' +
+      '<button class="btn ghost" id="retryNew">🎲 Soalan Dirawak Semula</button>' +
+      '<button class="btn ghost" id="backSetup">⚙️ Tukar Topik</button>' +
+    '</div>';
+
+  quizScreen.style.display = 'none';
+  resultScreen.style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  document.getElementById('retrySame').addEventListener('click', function(){
+    state.idx = 0;
+    state.score = 0;
+    state.wrong = [];
+    resultScreen.style.display = 'none';
+    quizScreen.style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+    renderQuestion();
+  });
+
+  document.getElementById('retryNew').addEventListener('click', function(){
+    resultScreen.style.display = 'none';
+    startQuiz();
+  });
+
+  document.getElementById('backSetup').addEventListener('click', function(){
+    resultScreen.style.display = 'none';
+    setupScreen.style.display = 'block';
+    updateSetupInfo();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+}
+
+/* =====================================================
+   INIT
+   ===================================================== */
+document.getElementById('headerSub').textContent =
+  QUESTIONS.length + ' soalan • ' + getTopics().length + ' topik • Pilihan jawapan dirawak';
+
+buildSetup();
+</script>
+</body>
+</html>
