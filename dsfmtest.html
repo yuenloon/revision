@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluid Mechanics — Exam Prep (Ch2–Ch5)</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",sans-serif;
+    background:#eef2f8;color:#1b2333;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  header{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#0e7490 100%);color:#fff;padding:30px 0 26px}
+  header h1{margin:0 0 8px;font-size:1.55rem;letter-spacing:.2px}
+  header p{margin:0;font-size:.92rem;opacity:.88}
+  .badges{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);
+    padding:4px 11px;border-radius:999px;font-size:.78rem;font-weight:600}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 18px}
+
+  nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #dbe3ef;
+      box-shadow:0 2px 10px rgba(15,23,42,.06)}
+  nav .wrap{display:flex;gap:8px;overflow-x:auto;padding:10px 18px;align-items:center}
+  .tab{border:1px solid #cbd5e1;background:#fff;color:#334155;padding:8px 15px;border-radius:999px;
+    cursor:pointer;font-size:.87rem;white-space:nowrap;font-weight:700;transition:.15s}
+  .tab:hover{background:#f1f5f9}
+  .tab.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a}
+  .tab.alt{margin-left:auto;background:#fef3c7;border-color:#fcd34d;color:#92400e}
+  .tab.alt:hover{background:#fde68a}
+
+  main{padding:26px 0 70px}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;
+        margin-bottom:18px;box-shadow:0 1px 3px rgba(15,23,42,.05)}
+  h2{margin:0 0 4px;font-size:1.32rem}
+  h2 .num{display:inline-block;background:#1e3a8a;color:#fff;border-radius:8px;
+    padding:1px 10px;font-size:.85rem;margin-right:8px;vertical-align:middle}
+  h3{margin:22px 0 8px;font-size:1.05rem;color:#0f172a;border-left:4px solid #1e3a8a;padding-left:10px}
+  h4{margin:16px 0 6px;font-size:.95rem;color:#334155;text-transform:uppercase;letter-spacing:.6px}
+  .lede{color:#5b6779;font-size:.93rem;margin:2px 0 0}
+
+  .formula{background:#f0f7ff;border:1px solid #bfdbfe;border-left:5px solid #2563eb;
+    border-radius:9px;padding:12px 16px;margin:10px 0;font-size:1.02rem;color:#0f2a5c}
+  .formula b{color:#1e3a8a}
+  .formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+  .formula-grid .formula{margin:0}
+
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:5px solid #f59e0b;
+    border-radius:9px;padding:11px 15px;margin:12px 0;font-size:.9rem}
+  .warn{background:#fef2f2;border:1px solid #fecaca;border-left:5px solid #dc2626;
+    border-radius:9px;padding:11px 15px;margin:12px 0;font-size:.9rem}
+  .tip{background:#ecfdf5;border:1px solid #a7f3d0;border-left:5px solid #059669;
+    border-radius:9px;padding:11px 15px;margin:12px 0;font-size:.9rem}
+
+  details{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;
+    margin:12px 0;overflow:hidden}
+  details[open]{background:#fff;border-color:#cbd5e1}
+  summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:.9rem;color:#1e3a8a;
+    background:#eff6ff;list-style:none;user-select:none;display:flex;align-items:center;gap:8px}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";transition:.2s;display:inline-block}
+  details[open] summary::before{transform:rotate(90deg)}
+  summary:hover{background:#dbeafe}
+  .sol{padding:6px 18px 16px;border-top:1px solid #e2e8f0}
+  .sol ol{margin:8px 0 8px 4px;padding-left:20px}
+  .sol li{margin:5px 0}
+  .answer{background:#ecfdf5;border:1px dashed #34d399;border-radius:8px;
+    padding:8px 14px;margin-top:10px;font-weight:700;color:#065f46}
+
+  .prob{background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+    padding:14px 16px;margin:14px 0}
+  .prob .q{font-weight:700;color:#0f172a;margin:0 0 6px}
+  .prob .given{font-size:.88rem;color:#475569;margin:0}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+  th,td{border:1px solid #e2e8f0;padding:8px 10px;text-align:left}
+  th{background:#f1f5f9;font-weight:700;color:#0f172a}
+  tr:nth-child(even) td{background:#f8fafc}
+
+  code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;
+    padding:1px 6px;font-family:ui-monospace,Consolas,monospace;font-size:.9em;color:#0f2a5c}
+  .eq{font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:.95em;
+    background:#f8fafc;border-radius:6px;padding:2px 6px;display:inline-block}
+
+  ul.tight li,ol.tight li{margin:3px 0}
+  .chk{list-style:none;padding-left:0}
+  .chk li{padding-left:28px;position:relative;margin:7px 0}
+  .chk li::before{content:"✓";position:absolute;left:6px;color:#059669;font-weight:800}
+
+  footer{background:#0f172a;color:#94a3b8;padding:22px 0;font-size:.85rem;text-align:center}
+  .kbd{font-size:.78rem;background:#e0e7ff;color:#3730a3;border-radius:5px;padding:2px 7px;font-weight:700}
+
+  @media print{
+    nav,.tab,footer{display:none}
+    .panel{display:block !important}
+    .card{break-inside:avoid;box-shadow:none}
+    details{open:true}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>💧 Fluid Mechanics — Test Prep</h1>
+    <p>Narrowed to your lecturer's focus areas. Every worked example below is exam-style.</p>
+    <div class="badges">
+      <span class="badge">Ch2 · Manometers</span>
+      <span class="badge">Ch3 · Hydrostatic Force &amp; Buoyancy</span>
+      <span class="badge">Ch4 · Continuity &amp; Bernoulli</span>
+      <span class="badge">Ch5 · Momentum — Jet on Plate ⭐</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <button class="tab active" data-target="ch2">Ch2 · Manometer</button>
+    <button class="tab" data-target="ch3">Ch3 · Hydrostatics</button>
+    <button class="tab" data-target="ch4">Ch4 · Continuity &amp; Bernoulli</button>
+    <button class="tab" data-target="ch5">Ch5 · Momentum ⭐</button>
+    <button class="tab" data-target="cheat">Cheat Sheet</button>
+    <button class="tab alt" id="expandAll">Expand all ▾</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============================================================ -->
+<!-- CHAPTER 2 -->
+<!-- ============================================================ -->
+<section class="panel active" id="ch2">
+  <div class="card">
+    <h2><span class="num">CH 2</span>Pressure &amp; Manometers</h2>
+    <p class="lede">The single most reliable mark-earner on the paper. Master the "walk the tube" method.</p>
+  </div>
+
+  <div class="card">
+    <h3>Core formulas</h3>
+    <div class="formula-grid">
+      <div class="formula"><b>Hydrostatic pressure</b><br>P = P₀ + ρgh</div>
+      <div class="formula"><b>Density from SG</b><br>ρ = SG × 1000 kg/m³</div>
+      <div class="formula"><b>Specific weight</b><br>γ = ρg &nbsp;(N/m³)</div>
+      <div class="formula"><b>Pressure head</b><br>h = P / (ρg)</div>
+      <div class="formula"><b>Absolute pressure</b><br>P<sub>abs</sub> = P<sub>gage</sub> + P<sub>atm</sub></div>
+      <div class="formula"><b>Unit bridge</b><br>1 kPa = 1000 N/m² &nbsp;·&nbsp; 1 MPa = 10⁶ Pa</div>
+    </div>
+
+    <h3>The manometer rule (learn this cold)</h3>
+    <ol class="tight">
+      <li>Start at one end of the manometer (usually the unknown).</li>
+      <li><b>Going DOWN</b> in the fluid → <b>ADD</b> ρgh.</li>
+      <li><b>Going UP</b> → <b>SUBTRACT</b> ρgh.</li>
+      <li>Same fluid at the same level → same pressure (this is why you can "jump" across a U-tube at the lower interface level).</li>
+      <li>Set the result equal to the pressure at the other end. Solve.</li>
+    </ol>
+    <div class="tip"><b>Time-saver:</b> write every term in <b>kPa</b> by dividing ρgh by 1000. Then you never touch scientific notation.</div>
+  </div>
+
+  <!-- EXAMPLE A -->
+  <div class="card">
+    <h3>Worked Example A — Simple manometer (open to atmosphere)</h3>
+    <div class="prob">
+      <p class="q">A manometer measures the pressure in a tank containing a fluid of SG = 0.85. The column height is 55 cm and atmospheric pressure is 96 kPa. Find the absolute and gauge pressure in the tank.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Density of the manometer fluid</b><br>
+            <span class="eq">ρ = SG × 1000 = 0.85 × 1000 = 850 kg/m³</span></li>
+          <li><b>Gauge pressure</b> (this is what the column measures)<br>
+            <span class="eq">P<sub>gage</sub> = ρgh = 850 × 9.81 × 0.55 = 4586 Pa = 4.59 kPa</span></li>
+          <li><b>Absolute pressure</b><br>
+            <span class="eq">P<sub>abs</sub> = P<sub>atm</sub> + P<sub>gage</sub> = 96 + 4.59 = 100.6 kPa</span></li>
+        </ol>
+        <div class="answer">P<sub>abs</sub> = 100.6 kPa &nbsp;·&nbsp; P<sub>gage</sub> = 4.6 kPa</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- EXAMPLE B -->
+  <div class="card">
+    <h3>Worked Example B — Multifluid manometer ⭐ (most likely exam question)</h3>
+    <div class="prob">
+      <p class="q">A tank is at an altitude where P<sub>atm</sub> = 85.6 kPa. The manometer has: h₁ = 0.1 m of water, h₂ = 0.2 m of oil (SG = 0.85), and h₃ = 0.35 m of mercury (SG = 13.6). Determine the air pressure in the tank.</p>
+      <p class="given">Given: SG<sub>water</sub> = 1.0 · SG<sub>oil</sub> = 0.85 · SG<sub>Hg</sub> = 13.6</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Walk the tube from the air, going down/up to the open end:</b><br>
+            <span class="eq">P₁ + ρ<sub>w</sub>gh₁ + ρ<sub>oil</sub>gh₂ − ρ<sub>Hg</sub>gh₃ = P<sub>atm</sub></span></li>
+          <li><b>Rearrange for P₁:</b><br>
+            <span class="eq">P₁ = P<sub>atm</sub> − ρ<sub>w</sub>gh₁ − ρ<sub>oil</sub>gh₂ + ρ<sub>Hg</sub>gh₃</span></li>
+          <li><b>Substitute densities (kg/m³) and heights:</b><br>
+            <span class="eq">P₁ = 85.6 + 9.81 × [(13600)(0.35) − (1000)(0.1) − (850)(0.2)] / 1000</span></li>
+          <li><b>Work the bracket:</b><br>
+            <span class="eq">4760 − 100 − 170 = 4490</span><br>
+            <span class="eq">P₁ = 85.6 + 9.81 × 4490 / 1000 = 85.6 + 44.05</span></li>
+        </ol>
+        <div class="answer">P<sub>air</sub> = 129.7 ≈ <b>130 kPa</b></div>
+      </div>
+    </details>
+    <div class="note"><b>Note the sign logic:</b> mercury goes <b>down</b> (add), water and oil go <b>up</b> (subtract). Getting signs right is 80% of the marks here.</div>
+  </div>
+
+  <!-- HEAD -->
+  <div class="card">
+    <h3>Worked Example C — Pressure expressed as head</h3>
+    <div class="prob">
+      <p class="q">A gauge pressure is 350 kN/m². Express it as a head of (a) water, (b) mercury (RD = 13.6). Also find the absolute pressure if P<sub>atm</sub> = 101.3 kN/m².</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>(a) Water:</b><br>
+            <span class="eq">h = P/(ρg) = 350 × 10³ / (1000 × 9.81) = 35.68 m</span></li>
+          <li><b>(b) Mercury:</b><br>
+            <span class="eq">h = 350 × 10³ / (13.6 × 1000 × 9.81) = 2.62 m</span></li>
+          <li><b>Absolute pressure:</b><br>
+            <span class="eq">P<sub>abs</sub> = 350 + 101.3 = 451.3 kN/m²</span></li>
+        </ol>
+        <div class="answer">(a) 35.68 m H₂O &nbsp;·&nbsp; (b) 2.62 m Hg &nbsp;·&nbsp; P<sub>abs</sub> = 451.3 kN/m²</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>Quick drill — Diver pressure</h3>
+    <div class="prob">
+      <p class="q">A diver descends 30 m in seawater (ρ = 1025 kg/m³). Find the increase in pressure.</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">ΔP = ρgΔh = 1025 × 9.81 × 30 = 301,700 Pa</span></p>
+        <div class="answer">ΔP = 301.7 kPa</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ Common mistakes in manometer questions</h3>
+    <ul class="tight">
+      <li>Using SG directly as density. <b>Always</b> multiply by 1000.</li>
+      <li>Mixing Pa, kPa, and kN/m² in one line. Pick kPa and stick to it.</li>
+      <li>Forgetting that <b>atmospheric pressure must be added</b> if the question asks for absolute pressure.</li>
+      <li>Sign errors when the tube goes up then down then up. Walk it slowly, one segment at a time.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 3 -->
+<!-- ============================================================ -->
+<section class="panel" id="ch3">
+  <div class="card">
+    <h2><span class="num">CH 3</span>Hydrostatic Force &amp; Buoyancy</h2>
+    <p class="lede">Two families of question: (1) force on a submerged plane surface, (2) floating/submerged bodies.</p>
+  </div>
+
+  <div class="card">
+    <h3>Core formulas — submerged plane surfaces</h3>
+    <div class="formula-grid">
+      <div class="formula"><b>Resultant force</b><br>F<sub>R</sub> = ρ g h<sub>c</sub> A = γ h<sub>c</sub> A</div>
+      <div class="formula"><b>Centre of pressure</b><br>h<sub>p</sub> = h<sub>c</sub> + I<sub>c</sub> / (h<sub>c</sub> A)</div>
+      <div class="formula"><b>Rectangle I<sub>c</sub></b><br>I<sub>c</sub> = b d³ / 12</div>
+      <div class="formula"><b>Circle I<sub>c</sub></b><br>I<sub>c</sub> = πR⁴/4 = πD⁴/64</div>
+      <div class="formula"><b>Triangle I<sub>c</sub></b><br>I<sub>c</sub> = b h³ / 36</div>
+      <div class="formula"><b>Depth to centroid</b><br>h<sub>c</sub> = depth from free surface to the <b>centre</b> of the area</div>
+    </div>
+    <div class="tip"><b>Key insight:</b> h<sub>c</sub> is the depth to the <b>centroid</b>, NOT to the top or bottom of the plate. And h<sub>p</sub> is always <b>below</b> h<sub>c</sub> — if your answer isn't, you made an error.</div>
+
+    <h3>Core formulas — buoyancy</h3>
+    <div class="formula-grid">
+      <div class="formula"><b>Buoyant force</b><br>F<sub>B</sub> = ρ<sub>fluid</sub> g V<sub>displaced</sub></div>
+      <div class="formula"><b>Apparent weight</b><br>W<sub>app</sub> = W − F<sub>B</sub></div>
+      <div class="formula"><b>Floating body</b><br>W = F<sub>B</sub> (equilibrium)</div>
+      <div class="formula"><b>Tension when immersed</b><br>T = W − F<sub>B</sub></div>
+    </div>
+  </div>
+
+  <!-- 3.1 -->
+  <div class="card">
+    <h3>Worked Example 1 — Vertical circular plate</h3>
+    <div class="prob">
+      <p class="q">A circular surface of diameter 2 m is vertical, with its top edge 0.5 m below the water surface. Find the resultant force and the depth of the centre of pressure.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Depth to centroid</b> (centre of the circle):<br>
+            <span class="eq">h<sub>c</sub> = 0.5 + 2/2 = 1.5 m</span></li>
+          <li><b>Area:</b><br>
+            <span class="eq">A = πD²/4 = π(2)²/4 = π = 3.1416 m²</span></li>
+          <li><b>Resultant force:</b><br>
+            <span class="eq">F<sub>R</sub> = ρgh<sub>c</sub>A = 1000 × 9.81 × 1.5 × 3.1416 = 46,234 N</span></li>
+          <li><b>Centre of pressure:</b><br>
+            <span class="eq">I<sub>c</sub> = πR⁴/4 = π(1)⁴/4 = 0.7854 m⁴</span><br>
+            <span class="eq">h<sub>p</sub> = 1.5 + 0.7854/(1.5 × 3.1416) = 1.5 + 0.1667 = 1.667 m</span></li>
+        </ol>
+        <div class="answer">F<sub>R</sub> = 46.2 kN &nbsp;·&nbsp; h<sub>p</sub> = 1.667 m</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 3.2 -->
+  <div class="card">
+    <h3>Worked Example 2 — Plywood sheet against concrete (hinge + stop) ⭐</h3>
+    <div class="prob">
+      <p class="q">A plywood sheet 1.22 m × 2.44 m retains concrete of depth 0.96 m (SG = 2.4). It is hinged at the top and rests on a stop at the bottom. Find (a) the resultant force and its location, (b) the force on the stop.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Density of concrete:</b><br>
+            <span class="eq">ρ = 2.4 × 1000 = 2400 kg/m³</span></li>
+          <li><b>Centroid depth &amp; wetted area:</b><br>
+            <span class="eq">h<sub>c</sub> = 0.96/2 = 0.48 m</span><br>
+            <span class="eq">A = 0.96 × 2.44 = 2.342 m²</span></li>
+          <li><b>Resultant force:</b><br>
+            <span class="eq">F<sub>R</sub> = 2400 × 9.81 × 0.48 × 2.342 = 26,470 N</span></li>
+          <li><b>Centre of pressure</b> (rectangle: b = 2.44 m wide, d = 0.96 m tall):<br>
+            <span class="eq">I<sub>c</sub> = (2.44)(0.96)³/12 = 0.180 m⁴</span><br>
+            <span class="eq">h<sub>p</sub> = 0.48 + 0.180/(0.48 × 2.342) = 0.48 + 0.16 = 0.64 m</span></li>
+          <li><b>Force on stop — take moments about the hinge</b> (hinge is at the top, so the lever arm of F<sub>R</sub> is h<sub>p</sub> and of F<sub>stop</sub> is 0.96 m):<br>
+            <span class="eq">F<sub>stop</sub> × 0.96 = F<sub>R</sub> × h<sub>p</sub></span><br>
+            <span class="eq">F<sub>stop</sub> = (26.47 × 0.64)/0.96 = 17.65 kN</span></li>
+        </ol>
+        <div class="answer">F<sub>R</sub> = 26.47 kN at h<sub>p</sub> = 0.64 m &nbsp;·&nbsp; F<sub>stop</sub> = 17.65 kN</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 3.3 -->
+  <div class="card">
+    <h3>Worked Example 3 — Circular window on a cruise ship</h3>
+    <div class="prob">
+      <p class="q">A 30-cm-diameter circular window has its midpoint 5 m below the water surface. Seawater SG = 1.025. Find the force on the window and the pressure centre.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Average pressure at centroid:</b><br>
+            <span class="eq">P<sub>avg</sub> = ρgh<sub>c</sub> = 1025 × 9.81 × 5 = 50,276 N/m²</span></li>
+          <li><b>Area:</b><br>
+            <span class="eq">A = π(0.3)²/4 = 0.07069 m²</span></li>
+          <li><b>Force:</b><br>
+            <span class="eq">F<sub>R</sub> = 50,276 × 0.07069 = 3554 N</span></li>
+          <li><b>Centre of pressure</b> — for a circle, h<sub>p</sub> = y<sub>c</sub> + R²/(4y<sub>c</sub>):<br>
+            <span class="eq">h<sub>p</sub> = 5 + (0.15)²/(4 × 5) = 5 + 0.0011 = 5.0011 m</span></li>
+        </ol>
+        <div class="answer">F<sub>R</sub> = 3550 N &nbsp;·&nbsp; h<sub>p</sub> ≈ 5.00 m (essentially at the centroid)</div>
+      </div>
+    </details>
+    <div class="note"><b>Why so close?</b> The larger h<sub>c</sub> is compared to the plate size, the smaller the gap between h<sub>c</sub> and h<sub>p</sub>. Deep + small plate → h<sub>p</sub> ≈ h<sub>c</sub>.</div>
+  </div>
+
+  <!-- BUOYANCY 1 -->
+  <div class="card">
+    <h3>Worked Example 4 — Crane lowering a steel sphere (buoyancy) ⭐</h3>
+    <div class="prob">
+      <p class="q">A 1-m-diameter spherical steel block (ρ = 8050 kg/m³) is lowered into a lake. Find the cable tension when (a) suspended in air, (b) completely immersed.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Volume of sphere:</b><br>
+            <span class="eq">V = πD³/6 = π(1)³/6 = 0.5236 m³</span></li>
+          <li><b>Weight in air:</b><br>
+            <span class="eq">W = ρ<sub>s</sub>gV = 8050 × 9.81 × 0.5236 = 41,350 N</span></li>
+          <li><b>(a) In air:</b> no buoyancy → <span class="eq">T = W = 41.35 kN</span></li>
+          <li><b>(b) Immersed</b> — buoyancy of displaced water:<br>
+            <span class="eq">F<sub>B</sub> = ρ<sub>w</sub>gV = 1000 × 9.81 × 0.5236 = 5137 N</span><br>
+            <span class="eq">T = W − F<sub>B</sub> = 41,350 − 5137 = 36,213 N</span></li>
+        </ol>
+        <div class="answer">(a) 41.35 kN &nbsp;·&nbsp; (b) 36.2 kN</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- BUOYANCY 2 -->
+  <div class="card">
+    <h3>Worked Example 5 — Spring scale / apparent weight</h3>
+    <div class="prob">
+      <p class="q">A body weighs 7200 N in air and 4790 N when fully submerged in water. Find its volume and density.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Buoyant force = loss of weight:</b><br>
+            <span class="eq">F<sub>B</sub> = 7200 − 4790 = 2410 N</span></li>
+          <li><b>Volume (from F<sub>B</sub> = ρ<sub>w</sub>gV):</b><br>
+            <span class="eq">V = 2410/(1000 × 9.81) = 0.2457 m³</span></li>
+          <li><b>Mass and density:</b><br>
+            <span class="eq">m = W/g = 7200/9.81 = 734 kg</span><br>
+            <span class="eq">ρ = m/V = 734/0.2457 = 2987 kg/m³</span></li>
+        </ol>
+        <div class="answer">V = 0.2457 m³ &nbsp;·&nbsp; ρ = 2987 kg/m³</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ Common mistakes</h3>
+    <ul class="tight">
+      <li>Using the plate's <b>bottom</b> depth instead of the centroid depth.</li>
+      <li>Forgetting to convert cm/mm to m before computing.</li>
+      <li>In buoyancy, using the density of the <b>body</b> instead of the <b>fluid</b> for F<sub>B</sub>.</li>
+      <li>Using the full height of the object when only part of it is submerged (V<sub>displaced</sub> is only the submerged volume).</li>
+      <li>For the stop/hinge moment: take moments about the hinge — the lever arm of F<sub>R</sub> is measured from the hinge, not from the surface.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 4 -->
+<!-- ============================================================ -->
+<section class="panel" id="ch4">
+  <div class="card">
+    <h2><span class="num">CH 4</span>Mass Continuity &amp; Bernoulli</h2>
+    <p class="lede">Part 1 = flow rates and velocities. Part 2 = pressure/velocity/height trade-offs.</p>
+  </div>
+
+  <div class="card">
+    <h3>Core formulas</h3>
+    <div class="formula-grid">
+      <div class="formula"><b>Volume flow rate</b><br>Q = A V &nbsp;(m³/s)</div>
+      <div class="formula"><b>Mass flow rate</b><br>ṁ = ρ A V &nbsp;(kg/s)</div>
+      <div class="formula"><b>Continuity (general)</b><br>ρ₁A₁V₁ = ρ₂A₂V₂</div>
+      <div class="formula"><b>Continuity (incompressible)</b><br>A₁V₁ = A₂V₂</div>
+      <div class="formula"><b>Bernoulli</b><br>P/ρg + V²/2g + z = constant</div>
+      <div class="formula"><b>Torricelli (tank outlet)</b><br>V = √(2gh)</div>
+    </div>
+    <div class="tip"><b>Which to use?</b> If the pipe changes size → <b>continuity first</b>, then Bernoulli. If pressures are involved → Bernoulli. If both → continuity to get velocities, then Bernoulli for pressure.</div>
+  </div>
+
+  <!-- 4.1 -->
+  <div class="card">
+    <h3>Worked Example 1 — Garden hose (flow rate + nozzle velocity)</h3>
+    <div class="prob">
+      <p class="q">A 10-gallon bucket is filled in 50 s. The hose inner diameter is 2 cm and the nozzle exit diameter is 0.8 cm. Find (a) the volume and mass flow rates, (b) the average velocity at the nozzle exit.</p>
+      <p class="given">1 gal = 3.7854 L · ρ<sub>water</sub> = 1000 kg/m³</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Volume flow rate:</b><br>
+            <span class="eq">Q = (10 gal / 50 s) × 3.7854 L/gal = 0.757 L/s = 7.57 × 10⁻⁴ m³/s</span></li>
+          <li><b>Mass flow rate:</b><br>
+            <span class="eq">ṁ = ρQ = 1000 × 7.57 × 10⁻⁴ = 0.757 kg/s</span></li>
+          <li><b>Nozzle exit area</b> (r = 0.4 cm = 0.004 m):<br>
+            <span class="eq">A<sub>e</sub> = π(0.004)² = 5.027 × 10⁻⁵ m²</span></li>
+          <li><b>Exit velocity:</b><br>
+            <span class="eq">V<sub>e</sub> = Q/A<sub>e</sub> = 7.57 × 10⁻⁴ / 5.027 × 10⁻⁵ = 15.1 m/s</span></li>
+        </ol>
+        <div class="answer">(a) Q = 0.757 L/s, ṁ = 0.757 kg/s &nbsp;·&nbsp; (b) V = 15.1 m/s</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 4.2 -->
+  <div class="card">
+    <h3>Worked Example 2 — Pipe fork / branching ⭐</h3>
+    <div class="prob">
+      <p class="q">Pipe AB: d = 1.2 m, V = 3 m/s. Pipe BC: d = 1.5 m. At C the pipe forks into CD (d = 0.8 m) which carries 1/3 of the flow in AB, and CE where the velocity is 2.5 m/s. Find (a) Q<sub>AB</sub>, (b) V<sub>BC</sub>, (c) V<sub>CD</sub>, (d) d<sub>CE</sub>.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>(a) Flow in AB:</b><br>
+            <span class="eq">A<sub>AB</sub> = π(1.2)²/4 = 1.131 m²</span><br>
+            <span class="eq">Q<sub>AB</sub> = 1.131 × 3 = 3.393 m³/s</span></li>
+          <li><b>(b) Same flow passes through BC:</b><br>
+            <span class="eq">A<sub>BC</sub> = π(1.5)²/4 = 1.767 m²</span><br>
+            <span class="eq">V<sub>BC</sub> = 3.393/1.767 = 1.92 m/s</span></li>
+          <li><b>(c) Branch CD carries 1/3 of Q<sub>AB</sub>:</b><br>
+            <span class="eq">Q<sub>CD</sub> = 3.393/3 = 1.131 m³/s</span><br>
+            <span class="eq">A<sub>CD</sub> = π(0.8)²/4 = 0.5027 m²</span><br>
+            <span class="eq">V<sub>CD</sub> = 1.131/0.5027 = 2.25 m/s</span></li>
+          <li><b>(d) Branch CE takes the rest:</b><br>
+            <span class="eq">Q<sub>CE</sub> = 3.393 − 1.131 = 2.262 m³/s</span><br>
+            <span class="eq">A<sub>CE</sub> = Q/V = 2.262/2.5 = 0.9048 m²</span><br>
+            <span class="eq">d<sub>CE</sub> = √(4A/π) = √(4 × 0.9048/π) = 1.073 m</span></li>
+        </ol>
+        <div class="answer">(a) 3.393 m³/s &nbsp;·&nbsp; (b) 1.92 m/s &nbsp;·&nbsp; (c) 2.25 m/s &nbsp;·&nbsp; (d) 1.073 m</div>
+      </div>
+    </details>
+    <div class="note"><b>Branch rule:</b> at a junction, <b>total flow in = total flow out</b>. Write Q<sub>in</sub> = ΣQ<sub>out</sub> before touching any numbers.</div>
+  </div>
+
+  <!-- 4.3 -->
+  <div class="card">
+    <h3>Worked Example 3 — Tank with outlet (Torricelli)</h3>
+    <div class="prob">
+      <p class="q">A large tank open to the atmosphere has a water height of 5 m above the outlet tap. Find the velocity at the outlet.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Bernoulli between the free surface (1) and the outlet (2):</b><br>
+            <span class="eq">P₁/ρg + V₁²/2g + z₁ = P₂/ρg + V₂²/2g + z₂</span></li>
+          <li><b>Apply conditions:</b> P₁ = P₂ = P<sub>atm</sub>; V₁ ≈ 0 (large tank); z₁ = 5, z₂ = 0.</li>
+          <li><b>The pressure terms cancel and V₁ vanishes:</b><br>
+            <span class="eq">z₁ = V₂²/2g</span><br>
+            <span class="eq">V₂ = √(2gz₁) = √(2 × 9.81 × 5) = 9.9 m/s</span></li>
+        </ol>
+        <div class="answer">V₂ = 9.9 m/s (Torricelli's equation)</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 4.4 -->
+  <div class="card">
+    <h3>Worked Example 4 — Hose jet height (pressure → height)</h3>
+    <div class="prob">
+      <p class="q">Water in a main is at 400 kPa gauge. A hose is held vertically upward. Find the maximum height the jet can reach.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Bernoulli from the hose outlet (1) to the top of the trajectory (2)</b> — at the top, V₂ = 0 and P₂ = P<sub>atm</sub>.</li>
+          <li><b>P₁ here is the gauge pressure</b>, so the atmospheric terms cancel:<br>
+            <span class="eq">z₂ = P₁,gage / (ρg)</span></li>
+          <li><b>Substitute:</b><br>
+            <span class="eq">z₂ = 400,000/(1000 × 9.81) = 40.8 m</span></li>
+        </ol>
+        <div class="answer">z₂ = 40.8 m</div>
+      </div>
+    </details>
+    <div class="tip"><b>Pattern to memorise:</b> gauge pressure ÷ ρg = height in metres. This shows up constantly.</div>
+  </div>
+
+  <!-- 4.5 -->
+  <div class="card">
+    <h3>Worked Example 5 — Tapering inclined pipe (continuity + Bernoulli) ⭐</h3>
+    <div class="prob">
+      <p class="q">A pipe inclined at 45° converges from d₁ = 200 mm to d₂ = 100 mm over a length of 2 m. Oil (SG = 0.9) flows with V₁ = 2 m/s. Find (a) the pressure difference P₁ − P₂, (b) the manometer reading.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>(a) Continuity gives V₂:</b><br>
+            <span class="eq">V₂ = V₁(d₁/d₂)² = 2 × (200/100)² = 8 m/s</span></li>
+          <li><b>Elevation change:</b><br>
+            <span class="eq">z₂ − z₁ = 2 sin 45° = 1.414 m</span></li>
+          <li><b>Bernoulli rearranged for pressure difference:</b><br>
+            <span class="eq">P₁ − P₂ = ½ρ(V₂² − V₁²) + ρg(z₂ − z₁)</span></li>
+          <li><b>Substitute (ρ = 0.9 × 1000 = 900 kg/m³):</b><br>
+            <span class="eq">P₁ − P₂ = 0.5 × 900 × (64 − 4) + 900 × 9.81 × 1.414</span><br>
+            <span class="eq">= 27,000 + 12,484 = 39,484 N/m²</span></li>
+          <li><b>(b) Manometer reading</b> (mercury–oil differential):<br>
+            <span class="eq">h = (P₁ − P₂)/[(ρ<sub>Hg</sub> − ρ<sub>oil</sub>)g]</span><br>
+            <span class="eq">h = 39,484/[(13600 − 900) × 9.81] = 0.317 m</span></li>
+        </ol>
+        <div class="answer">(a) P₁ − P₂ = 39.5 kPa &nbsp;·&nbsp; (b) h = 0.317 m</div>
+      </div>
+    </details>
+    <div class="note"><b>Sign watch:</b> if the pipe goes <b>up</b>, z₂ − z₁ is positive and pressure drops extra. If it goes <b>down</b>, the elevation term helps you.</div>
+  </div>
+
+  <!-- 4.6 -->
+  <div class="card">
+    <h3>Worked Example 6 — Venturi meter</h3>
+    <div class="prob">
+      <p class="q">A Venturi meter has d₁ = 250 mm and d₂ = 100 mm, carrying oil of SG = 0.9. A mercury manometer reads 0.63 m. Find the theoretical volume flow rate.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Areas:</b><br>
+            <span class="eq">A₁ = π(0.25)²/4 = 0.0491 m²</span><br>
+            <span class="eq">A₂ = π(0.10)²/4 = 0.00785 m²</span></li>
+          <li><b>Venturi equation:</b><br>
+            <span class="eq">Q = A₁/√[(A₁/A₂)² − 1] × √[2gh(ρ<sub>man</sub>/ρ − 1)]</span></li>
+          <li><b>Evaluate the area ratio term:</b><br>
+            <span class="eq">(A₁/A₂) = 6.25 → (6.25)² − 1 = 38.06 → √38.06 = 6.17</span><br>
+            <span class="eq">A₁/6.17 = 0.0491/6.17 = 0.00796</span></li>
+          <li><b>Evaluate the head term:</b><br>
+            <span class="eq">2gh = 2 × 9.81 × 0.63 = 12.36</span><br>
+            <span class="eq">(13600/900 − 1) = 14.11</span><br>
+            <span class="eq">√(12.36 × 14.11) = √174.4 = 13.21</span></li>
+          <li><b>Multiply:</b><br>
+            <span class="eq">Q = 0.00796 × 13.21 = 0.105 m³/s</span></li>
+        </ol>
+        <div class="answer">Q ≈ 0.105 m³/s</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- QUICK DRILLS -->
+  <div class="card">
+    <h3>Quick drills — try these first, then check</h3>
+
+    <div class="prob">
+      <p class="q">D1. A rectangular duct 300 mm × 450 mm carries 0.42 m³/s. Find the mean velocity. If the duct tapers to 150 mm × 400 mm, find the new velocity.</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">A₁ = 0.3 × 0.45 = 0.135 m² → V₁ = 0.42/0.135 = 3.11 m/s</span><br>
+        <span class="eq">A₂ = 0.15 × 0.4 = 0.06 m² → V₂ = 0.42/0.06 = 7.0 m/s</span></p>
+        <div class="answer">V₁ = 3.11 m/s, V₂ = 7.0 m/s</div>
+      </div>
+    </details>
+
+    <div class="prob">
+      <p class="q">D2. Air enters a compressor at ρ = 1.2 kg/m³, V = 5 m/s, A = 20 cm². (a) Find ṁ. (b) It leaves through a 25 mm diameter pipe at 4 m/s. Find the exit density.</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">ṁ = ρAV = 1.2 × 20×10⁻⁴ × 5 = 0.012 kg/s</span><br>
+        <span class="eq">A₂ = π(0.025)²/4 = 4.909 × 10⁻⁴ m²</span><br>
+        <span class="eq">ρ₂ = ṁ/(A₂V₂) = 0.012/(4.909×10⁻⁴ × 4) = 6.11 kg/m³</span></p>
+        <div class="answer">(a) 0.012 kg/s &nbsp;·&nbsp; (b) 6.11 kg/m³</div>
+      </div>
+    </details>
+
+    <div class="prob">
+      <p class="q">D3. A hair dryer: air density at inlet 1.20 kg/m³, at exit 1.05 kg/m³, constant diameter. Find the percent increase in velocity.</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">ρ₁A₁V₁ = ρ₂A₂V₂ and A₁ = A₂ → V₂/V₁ = ρ₁/ρ₂ = 1.20/1.05 = 1.143</span></p>
+        <div class="answer">14.3% increase in velocity</div>
+      </div>
+    </details>
+
+    <div class="prob">
+      <p class="q">D4. Air flows at 200 L/s through a pipe that narrows from 20 cm to 10 cm diameter. A water manometer measures the pressure difference. Find the differential height h. (ρ<sub>air</sub> = 1.20 kg/m³)</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">V₁ = 0.2/(π(0.2)²/4) = 6.37 m/s, V₂ = 0.2/(π(0.1)²/4) = 25.5 m/s</span><br>
+        <span class="eq">P₁ − P₂ = ρ<sub>air</sub>(V₂² − V₁²)/2 = 1.2(650.25 − 40.58)/2 = 365.8 Pa</span><br>
+        <span class="eq">h = (P₁ − P₂)/(ρ<sub>w</sub>g) = 365.8/(1000 × 9.81) = 0.0373 m</span></p>
+        <div class="answer">h = 3.7 cm</div>
+      </div>
+    </details>
+
+    <div class="prob">
+      <p class="q">D5. A pitot-static probe connected to a water manometer gives a deflection of 7.3 cm. Find the air velocity (ρ<sub>air</sub> = 1.25 kg/m³).</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">V = √(2ρ<sub>w</sub>gh/ρ<sub>air</sub>) = √(2 × 1000 × 9.81 × 0.073 / 1.25)</span><br>
+        <span class="eq">= √(1432.3/1.25) = √1145.8 = 33.8 m/s</span></p>
+        <div class="answer">V = 33.8 m/s</div>
+      </div>
+    </details>
+
+    <div class="prob">
+      <p class="q">D6. A closed tank has two inlets and one outlet. Inlet A: d = 150 mm, Q = 56 dm³/s, SG = 0.93. Inlet B: d = 100 mm, Q = 30 dm³/s, SG = 0.87. Outlet C: d = 175 mm. Find the mass flow rate, outlet velocity, and SG of the mixture.</p>
+    </div>
+    <details>
+      <summary>Show answer</summary>
+      <div class="sol">
+        <p><span class="eq">ṁ<sub>A</sub> = 930 × 0.056 = 52.08 kg/s</span><br>
+        <span class="eq">ṁ<sub>B</sub> = 870 × 0.030 = 26.10 kg/s</span><br>
+        <span class="eq">ṁ<sub>C</sub> = 78.18 kg/s &nbsp;·&nbsp; Q<sub>C</sub> = 0.086 m³/s</span><br>
+        <span class="eq">V<sub>C</sub> = 0.086/(π(0.175)²/4) = 3.57 m/s</span><br>
+        <span class="eq">ρ<sub>C</sub> = 78.18/0.086 = 909 kg/m³</span></p>
+        <div class="answer">ṁ = 78.18 kg/s &nbsp;·&nbsp; V = 3.57 m/s &nbsp;·&nbsp; SG = 0.909</div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 5 -->
+<!-- ============================================================ -->
+<section class="panel" id="ch5">
+  <div class="card" style="border-left:5px solid #dc2626">
+    <h2><span class="num" style="background:#dc2626">CH 5</span>Momentum — Jet Striking a Plate ⭐</h2>
+    <p class="lede"><b>This is your lecturer's flagged focus.</b> Everything below is narrowed to jets hitting plates and vanes. Master the four cases.</p>
+  </div>
+
+  <div class="card">
+    <h3>The master equation</h3>
+    <div class="formula">
+      <b>ΣF = ṁ (V<sub>out</sub> − V<sub>in</sub>)</b> &nbsp;&nbsp;(vector — do it component by component)
+    </div>
+    <div class="formula">
+      <b>Force exerted BY the jet ON the plate</b> = ṁ (V<sub>in</sub> − V<sub>out</sub>)
+    </div>
+    <div class="tip"><b>Direction discipline:</b> pick a positive direction (say, the jet's original direction). Then write every velocity with its sign. The force you compute is what the <b>plate exerts on the fluid</b>; the jet on the plate is equal and opposite.</div>
+  </div>
+
+  <div class="card">
+    <h3>The 4 cases you must know</h3>
+    <table>
+      <thead>
+        <tr><th>Case</th><th>Force normal to plate</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>1. Stationary flat plate</b> (jet perpendicular)</td>
+          <td>F = ρAV² = ṁV</td>
+          <td>Jet spreads in the plane → zero momentum normal to plate after impact</td>
+        </tr>
+        <tr>
+          <td><b>2. Inclined plate</b> (stationary)</td>
+          <td>F = ρAV² cos θ</td>
+          <td>θ = angle between jet axis and the <b>normal</b> to the plate</td>
+        </tr>
+        <tr>
+          <td><b>3. Moving flat plate</b> (speed u, same direction)</td>
+          <td>F = ρA(V − u)²</td>
+          <td>Use <b>relative</b> velocity. Power P = F × u</td>
+        </tr>
+        <tr>
+          <td><b>4. Curved vane</b></td>
+          <td>Components: F<sub>x</sub> = ṁ(V<sub>in,x</sub> − V<sub>out,x</sub>), F<sub>y</sub> = ṁ(V<sub>in,y</sub> − V<sub>out,y</sub>)</td>
+          <td>Resultant R = √(F<sub>x</sub>² + F<sub>y</sub>²), angle φ = tan⁻¹(F<sub>y</sub>/F<sub>x</sub>)</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warn"><b>Angle convention warning:</b> In these notes, <b>θ is measured from the normal to the plate</b>. So θ = 0° → jet hits square-on → maximum force. θ = 90° → jet skims along the plate → zero normal force. If an exam question gives the angle to the <b>plate surface</b> instead, use (90° − that angle).</div>
+  </div>
+
+  <!-- 5.1 -->
+  <div class="card">
+    <h3>Worked Example 1 — Jet on an inclined flat plate ⭐⭐</h3>
+    <div class="prob">
+      <p class="q">A jet of diameter 25 mm and velocity 5 m/s strikes an inclined flat plate. Find the force normal to the plate as the inclination varies.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Formula for a stationary plate at angle θ from the normal:</b><br>
+            <span class="eq">F = ρA(v − u)² cos θ, with u = 0 → F = ρAv² cos θ</span></li>
+          <li><b>Jet area:</b><br>
+            <span class="eq">A = π(0.025)²/4 = 4.909 × 10⁻⁴ m²</span></li>
+          <li><b>Reference force ρAv²:</b><br>
+            <span class="eq">ρAv² = 1000 × 4.909×10⁻⁴ × 25 = 12.27 N</span></li>
+          <li><b>Evaluate at each angle:</b></li>
+        </ol>
+        <table>
+          <thead><tr><th>θ (from normal)</th><th>cos θ</th><th>Force (N)</th></tr></thead>
+          <tbody>
+            <tr><td>0°</td><td>1.000</td><td>12.27</td></tr>
+            <tr><td>30°</td><td>0.866</td><td>10.63</td></tr>
+            <tr><td>60°</td><td>0.500</td><td>6.14</td></tr>
+            <tr><td>90°</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <div class="answer">Maximum force 12.27 N at θ = 0° (square-on impact); zero at θ = 90°</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 5.2 -->
+  <div class="card">
+    <h3>Worked Example 2 — Curved vane (deflection)</h3>
+    <div class="prob">
+      <p class="q">A jet is deflected through 60° by a curved vane. The entry velocity is 30 m/s and the exit velocity is 25 m/s. The mass flow rate is 0.8 kg/s. Find the resultant force on the vane.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Take x along the incoming jet.</b> Inlet: V<sub>in,x</sub> = 30, V<sub>in,y</sub> = 0.</li>
+          <li><b>Outlet:</b> V<sub>out,x</sub> = 25 cos 60° = 12.5, V<sub>out,y</sub> = 25 sin 60° = 21.65.</li>
+          <li><b>x-momentum:</b><br>
+            <span class="eq">F<sub>x</sub> = ṁ(V<sub>in,x</sub> − V<sub>out,x</sub>) = 0.8(30 − 12.5) = 14 N</span></li>
+          <li><b>y-momentum:</b><br>
+            <span class="eq">F<sub>y</sub> = 0.8(0 − 21.65) = −17.32 N</span></li>
+          <li><b>Resultant:</b><br>
+            <span class="eq">R = √(14² + 17.32²) = √496 = 22.3 N</span></li>
+          <li><b>Direction:</b><br>
+            <span class="eq">φ = tan⁻¹(17.32/14) = 51°</span></li>
+        </ol>
+        <div class="answer">R = 22.3 N at 51° to the horizontal</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 5.3 -->
+  <div class="card">
+    <h3>Worked Example 3 — Stationary vs moving flat plate ⭐</h3>
+    <div class="prob">
+      <p class="q">A jet of diameter 50 mm at 18 m/s strikes a flat plate. Find the force when (a) the plate is stationary, (b) the plate moves at 6 m/s in the same direction as the jet.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Jet area:</b><br>
+            <span class="eq">A = π(0.05)²/4 = 1.963 × 10⁻³ m²</span></li>
+          <li><b>(a) Stationary (u = 0):</b><br>
+            <span class="eq">F = ρAv² = 1000 × 1.963×10⁻³ × 18² = 636 N</span></li>
+          <li><b>(b) Moving at u = 6 m/s</b> — use relative velocity (v − u):<br>
+            <span class="eq">F = ρA(v − u)² = 1000 × 1.963×10⁻³ × (18 − 6)²</span><br>
+            <span class="eq">= 1.963 × 144 = 283 N</span></li>
+        </ol>
+        <div class="answer">(a) 636 N &nbsp;·&nbsp; (b) 283 N</div>
+      </div>
+    </details>
+    <div class="note"><b>Sanity check:</b> a moving plate always feels less force than a stationary one, because the jet hits it with reduced relative speed. If your moving answer is bigger, you made an error.</div>
+  </div>
+
+  <!-- 5.4 -->
+  <div class="card">
+    <h3>Worked Example 4 — Inclined plate, stationary and moving</h3>
+    <div class="prob">
+      <p class="q">A jet of d = 25 mm and v = 5 m/s strikes a plate at 30° to the normal. Find the force normal to the plate when (a) the plate is stationary, (b) the plate moves at 2 m/s.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Formula:</b> <span class="eq">F = ρA(v − u)² cos θ</span></li>
+          <li><b>(a) Stationary (u = 0):</b><br>
+            <span class="eq">F = 1000 × 4.909×10⁻⁴ × 25 × cos 30°</span><br>
+            <span class="eq">= 12.27 × 0.866 = 10.63 N</span></li>
+          <li><b>(b) Moving at u = 2 m/s:</b><br>
+            <span class="eq">F = 1000 × 4.909×10⁻⁴ × (5 − 2)² × cos 30°</span><br>
+            <span class="eq">= 4.909 × 9 × 0.866 = 3.83 N</span></li>
+        </ol>
+        <div class="answer">(a) 10.63 N &nbsp;·&nbsp; (b) 3.83 N</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 5.5 -->
+  <div class="card">
+    <h3>Worked Example 5 — Moving plate with power (braking cart)</h3>
+    <div class="prob">
+      <p class="q">A water jet at 15 m/s strikes a cart moving at 5 m/s. The jet's mass flow rate is 25 kg/s. Find the braking force and the power absorbed.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Relative velocity:</b><br>
+            <span class="eq">V<sub>rel</sub> = 15 − 5 = 10 m/s</span></li>
+          <li><b>Braking force:</b><br>
+            <span class="eq">F = ṁ V<sub>rel</sub> = 25 × 10 = 250 N</span></li>
+          <li><b>Power absorbed by the cart:</b><br>
+            <span class="eq">P = F × V<sub>cart</sub> = 250 × 5 = 1250 W</span></li>
+        </ol>
+        <div class="answer">F = 250 N &nbsp;·&nbsp; P = 1.25 kW</div>
+      </div>
+    </details>
+    <div class="tip"><b>Power rule:</b> P = F × u, where u is the speed of the <b>moving</b> body, never the jet speed.</div>
+  </div>
+
+  <!-- 5.6 -->
+  <div class="card">
+    <h3>Worked Example 6 — Simple momentum force from mass flow</h3>
+    <div class="prob">
+      <p class="q">Water strikes a stationary plate at 20 m/s with a mass flow rate of 10 kg/s. Find the force on the plate.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Perpendicular stationary plate:</b> all the jet's momentum normal to the plate is destroyed.<br>
+            <span class="eq">F = ṁV = 10 × 20 = 200 N</span></li>
+        </ol>
+        <div class="answer">F = 200 N</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 5.7 -->
+  <div class="card">
+    <h3>Worked Example 7 — Plate on a track (variable force, challenge) 🏆</h3>
+    <div class="prob">
+      <p class="q">A 5-cm diameter jet at 18 m/s strikes a plate of mass 1000 kg free to move on a track. Find (a) the acceleration at t = 0, (b) the time to reach 9 m/s, (c) the velocity at 20 s.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Jet area:</b> <span class="eq">A = π(0.05)²/4 = 1.963 × 10⁻³ m²</span></li>
+          <li><b>(a) Initial force (plate at rest):</b><br>
+            <span class="eq">F₀ = ρAV² = 1000 × 1.963×10⁻³ × 18² = 636 N</span><br>
+            <span class="eq">a₀ = F₀/m = 636/1000 = 0.636 m/s²</span></li>
+          <li><b>(b) As the plate speeds up, u rises and force falls:</b><br>
+            <span class="eq">m du/dt = ρA(V − u)²</span><br>
+            Integrating from u = 0 at t = 0:<br>
+            <span class="eq">t = (m/ρA)[ 1/(V − u) − 1/V ]</span><br>
+            For u = 9 m/s:<br>
+            <span class="eq">t = (1000/1.963)(1/9 − 1/18) = 509.4 × 0.05556 = 28.3 s</span></li>
+          <li><b>(c) At t = 20 s, solve for u:</b><br>
+            <span class="eq">1/(18 − u) = 1/18 + (ρA t)/m = 0.05556 + (1.963×10⁻³ × 20)/1 ... </span><br>
+            <span class="eq">= 0.05556 + 0.03927 = 0.09483</span><br>
+            <span class="eq">18 − u = 10.55 → u = 7.45 m/s</span></li>
+        </ol>
+        <div class="answer">(a) 0.636 m/s² &nbsp;·&nbsp; (b) 28.3 s &nbsp;·&nbsp; (c) 7.45 m/s</div>
+      </div>
+    </details>
+    <div class="note"><b>Pattern:</b> when the plate's speed changes, the force changes, so you must integrate. The governing relation is <span class="eq">m du/dt = ρA(V − u)²</span>. If your exam says "find the time", expect this integration.</div>
+  </div>
+
+  <!-- BONUS -->
+  <div class="card">
+    <h3>Bonus — Momentum on pipe bends (secondary, but often paired)</h3>
+    <div class="prob">
+      <p class="q">Water flows at 25 kg/s through a 90° elbow of 10 cm diameter with a 35 cm elevation rise. Find (a) the gauge pressure at the inlet, (b) the resultant anchoring force.</p>
+    </div>
+    <details>
+      <summary>Show step-by-step solution</summary>
+      <div class="sol">
+        <ol>
+          <li><b>Velocity:</b><br>
+            <span class="eq">V = ṁ/(ρA) = 25/(1000 × π(0.1)²/4) = 3.18 m/s</span></li>
+          <li><b>(a) Bernoulli (same velocity magnitude, so velocity terms cancel):</b><br>
+            <span class="eq">P<sub>1,gage</sub> = ρg(z₂ − z₁) = 1000 × 9.81 × 0.35 = 3434 Pa</span></li>
+          <li><b>(b) x-direction momentum</b> (flow turns from +x to +z):<br>
+            <span class="eq">F<sub>Rx</sub> + P<sub>1</sub>A₁ = ṁ(0 − V) = −25 × 3.18 = −79.5 N</span><br>
+            <span class="eq">P<sub>1</sub>A₁ = 3434 × 0.007854 = 27.0 N</span><br>
+            <span class="eq">F<sub>Rx</sub> = −79.5 − 27.0 = −106.5 N</span></li>
+          <li><b>z-direction:</b><br>
+            <span class="eq">F<sub>Rz</sub> = ṁV = 25 × 3.18 = 79.5 N</span></li>
+          <li><b>Resultant:</b><br>
+            <span class="eq">F<sub>R</sub> = √(106.5² + 79.5²) = 133 N</span></li>
+        </ol>
+        <div class="answer">(a) 3.43 kPa &nbsp;·&nbsp; (b) F<sub>R</sub> ≈ 133 N at ~143° from the positive x-axis</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ Chapter 5 traps</h3>
+    <ul class="tight">
+      <li>Using the absolute jet velocity instead of the <b>relative</b> velocity (V − u) for a moving plate.</li>
+      <li>Using the jet speed instead of the plate speed when computing power.</li>
+      <li>Forgetting that the jet's momentum <b>normal</b> to a flat plate becomes zero after impact — that's why the force is ρAV².</li>
+      <li>Mixing up the angle convention (normal vs. surface).</li>
+      <li>Losing the sign in component problems — always draw the x and y axes and mark directions.</li>
+      <li>Confusing the force <b>of the plate on the fluid</b> with the force <b>of the fluid on the plate</b> (equal and opposite).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHEAT SHEET -->
+<!-- ============================================================ -->
+<section class="panel" id="cheat">
+  <div class="card">
+    <h2>📋 One-Page Cheat Sheet</h2>
+    <p class="lede">Skim this the morning of the test.</p>
+  </div>
+
+  <div class="card">
+    <h3>Chapter 2 — Manometer</h3>
+    <table>
+      <tr><th>Quantity</th><th>Formula</th></tr>
+      <tr><td>Pressure at depth</td><td>P = P₀ + ρgh</td></tr>
+      <tr><td>Density from SG</td><td>ρ = SG × 1000</td></tr>
+      <tr><td>Head</td><td>h = P/(ρg)</td></tr>
+      <tr><td>Absolute</td><td>P<sub>abs</sub> = P<sub>gage</sub> + P<sub>atm</sub></td></tr>
+      <tr><td>Rule</td><td>Down → add ρgh &nbsp;|&nbsp; Up → subtract ρgh</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Chapter 3 — Hydrostatics &amp; Buoyancy</h3>
+    <table>
+      <tr><th>Quantity</th><th>Formula</th></tr>
+      <tr><td>Force on plane surface</td><td>F<sub>R</sub> = ρ g h<sub>c</sub> A</td></tr>
+      <tr><td>Centre of pressure</td><td>h<sub>p</sub> = h<sub>c</sub> + I<sub>c</sub>/(h<sub>c</sub>A)</td></tr>
+      <tr><td>I<sub>c</sub> rectangle</td><td>bd³/12</td></tr>
+      <tr><td>I<sub>c</sub> circle</td><td>πR⁴/4</td></tr>
+      <tr><td>I<sub>c</sub> triangle</td><td>bh³/36</td></tr>
+      <tr><td>Buoyancy</td><td>F<sub>B</sub> = ρ<sub>fluid</sub> g V<sub>disp</sub></td></tr>
+      <tr><td>Immersed tension</td><td>T = W − F<sub>B</sub></td></tr>
+      <tr><td>Floating</td><td>W = F<sub>B</sub></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Chapter 4 — Continuity &amp; Bernoulli</h3>
+    <table>
+      <tr><th>Quantity</th><th>Formula</th></tr>
+      <tr><td>Flow rate</td><td>Q = AV &nbsp;·&nbsp; ṁ = ρAV</td></tr>
+      <tr><td>Continuity</td><td>A₁V₁ = A₂V₂ &nbsp;(ρ₁A₁V₁ = ρ₂A₂V₂ for compressible)</td></tr>
+      <tr><td>Bernoulli</td><td>P/ρg + V²/2g + z = const</td></tr>
+      <tr><td>Torricelli</td><td>V = √(2gh)</td></tr>
+      <tr><td>Gauge pressure → height</td><td>h = P<sub>gage</sub>/(ρg)</td></tr>
+      <tr><td>Venturi</td><td>Q = A₁/√[(A₁/A₂)²−1] × √[2gh(ρ<sub>man</sub>/ρ − 1)]</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Chapter 5 — Momentum (Jets)</h3>
+    <table>
+      <tr><th>Case</th><th>Formula</th></tr>
+      <tr><td>General momentum</td><td>ΣF = ṁ(V<sub>out</sub> − V<sub>in</sub>)</td></tr>
+      <tr><td>Stationary flat plate (normal)</td><td>F = ρAV² = ṁV</td></tr>
+      <tr><td>Inclined plate (θ from normal)</td><td>F = ρAV² cos θ</td></tr>
+      <tr><td>Moving plate (speed u)</td><td>F = ρA(V − u)²</td></tr>
+      <tr><td>Moving inclined plate</td><td>F = ρA(V − u)² cos θ</td></tr>
+      <tr><td>Curved vane</td><td>F<sub>x</sub> = ṁ(V<sub>in,x</sub> − V<sub>out,x</sub>), F<sub>y</sub> = ṁ(V<sub>in,y</sub> − V<sub>out,y</sub>)</td></tr>
+      <tr><td>Resultant &amp; direction</td><td>R = √(F<sub>x</sub>²+F<sub>y</sub>²), φ = tan⁻¹(F<sub>y</sub>/F<sub>x</sub>)</td></tr>
+      <tr><td>Power on moving plate</td><td>P = F × u</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>✅ Exam-day checklist</h3>
+    <ul class="chk">
+      <li>Write down the given data with units <b>converted to SI</b> first (mm → m, L/s → m³/s, cm² → m²).</li>
+      <li>Draw a sketch. Label the free surface, the datum, and the direction of flow.</li>
+      <li>For manometers: walk the tube, add going down, subtract going up.</li>
+      <li>For hydrostatics: identify h<sub>c</sub> (to the centroid!) before anything else.</li>
+      <li>For buoyancy: ask "what volume is actually submerged?"</li>
+      <li>For Bernoulli: state your assumptions (steady, incompressible, frictionless, V ≈ 0 at a large surface).</li>
+      <li>For momentum: choose a control volume, draw the axes, and write components separately.</li>
+      <li>For moving plates: always subtract the plate speed from the jet speed <b>before</b> squaring.</li>
+      <li>Carry units through every line — they catch most errors.</li>
+      <li>Check the magnitude: a hose jet should be tens of m/s, a tank outlet a few m/s, hydrostatic forces in kN. Wildly off? Recheck the powers of ten.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#eff6ff,#ecfdf5);border-color:#bfdbfe">
+    <h3 style="border:none;padding:0;margin:0 0 6px">You've got this. 💪</h3>
+    <p style="margin:0;color:#475569;font-size:.92rem">Work through each example once with the solution hidden. If you can do that, you can do the test.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Fluid Mechanics Test Prep · Chapters 2–5 focus · Good luck on Monday!</div>
+</footer>
+
+<script>
+  // Tabs
+  document.querySelectorAll('.tab[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-target]').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+
+  // Expand / collapse all
+  const expandBtn = document.getElementById('expandAll');
+  let allOpen = false;
+  expandBtn.addEventListener('click', () => {
+    allOpen = !allOpen;
+    document.querySelectorAll('details').forEach(d => d.open = allOpen);
+    expandBtn.textContent = allOpen ? 'Collapse all ▴' : 'Expand all ▾';
+  });
+</script>
+
+</body>
+</html>
